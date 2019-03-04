@@ -1,0 +1,89 @@
+/* Empty. Add your own CSS if you like */
+
+.item-note {
+    float: right;
+    color: #444;
+    font-size: 14px;
+}
+
+.graphCard {
+    width: auto;
+    height: max-content;
+    border-radius: 0px !important;
+}
+
+.has-tabs-top {
+    top: 89px;
+}
+
+.login {
+    background-color: #e8e8e8;
+}
+
+.wrapper {
+    text-align: center;
+}
+
+.loginButton {
+    position: absolute;
+    top: 50%;
+}
+
+.historyFilter {
+    font-size: 23px;
+    padding-left: 5px;
+    padding-top: 5px;
+}
+
+.filterPopover {
+    height: max-content;
+}
+
+.pin {
+    text-align: center;
+    font-size: xx-large;
+}
+
+.disabled {
+    pointer-events: none;
+    opacity: 0.6;
+}
+
+.item .badge+.badge {
+    margin-right: 40px !important;
+}
+.item .badge+.badge+.badge {
+    margin-right: 80px !important;
+}
+.item .badge+.badge+.badge+.badge {
+    margin-right: 120px !important;
+}
+.arrow-dropdown{
+        float: right;
+        font-size: 28px;
+        color: #33cd5f
+}
+.item .badge {
+    display: flex;
+    position: absolute;
+    top: 16px;
+    right: 50px;
+}
+.rewardsPopUp {
+    float: none;
+    color: #444;
+    font-size: 14px;
+    padding: 15px;
+}
+
+.selectAgileRewards {
+    padding: 12px;
+    overflow: auto;
+    width: 300px;
+}
+.scrumPoints{
+    padding: 20px;
+}
+.popup{
+    width:auto;
+}
