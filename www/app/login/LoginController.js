@@ -5,7 +5,7 @@ angular
     .controller("LoginController", function($scope, $stateParams, $ionicPopup, $timeout, DashboardFactory, $q, $window, $state) {
         $scope.performLogin = function() {
 
-            $scope.authenticate(false);
+            //$scope.authenticate(false);
             console.log("clicked");
             // window.config = {
             //     clientId: '6d87a008-e330-43c1-b280-6fdf0fb0c490',

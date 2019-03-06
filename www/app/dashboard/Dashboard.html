@@ -4,6 +4,7 @@
         <i class="icon icon " ng-show="showHistoryFilterIcon == true"></i>
         <h1 class="title">Scrum Manager</h1>
         <button class="button icon ion-plus-round" ng-show="isMaster === true" ng-click="selectTeamForAddUsers()" style="border: 0;"></button>
+		<ion-icon class="refresh" name ="refresh"  ng-click="refresh()"></ion-icon>
     </div>
     <!-- <ion-side-menus>
         
@@ -42,7 +43,7 @@
                         </div>
                     </div>
 
-                    <div class="card graphCard">
+                    <div class="card graphCard" ng-show="isMaster === false">
                         <div class="item item-divider">
                             {{loggedUserDetails.name}}'s Scrum Points Chart
                         </div>

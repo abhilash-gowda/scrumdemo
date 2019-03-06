@@ -35,6 +35,7 @@ angular
                         $scope.isMaster = false;
                         $scope.getLoggedInUserDetails();
                         $scope.getAgilePriciples();
+						$scope.loadDashBoard();
                     } else {
                         $scope.isMaster = true;
                         $scope.getTeam();
@@ -388,7 +389,6 @@ angular
                                         $scope.loadDashBoard();
                                         console.log(success)
 
-                                        $scope.loadDashBoard();
                                     },
                                     function(error) {
                                         ionicToast.show(error, "bottom", false, 3500);
@@ -773,7 +773,11 @@ $scope.getAgilePriciples = function() {
             }
             return color;
         };     
-        $scope.loadDashBoard();
+		 $scope.refresh = function(){
+            $scope.associates = [];
+            $scope.checkUserType();
+        };
         $scope.checkUserType();
+		
     });
 
