@@ -2,10 +2,10 @@
 
 angular
     .module("starter")
-    .controller("LoginController", function($scope, $stateParams, $ionicPopup, $timeout, DashboardFactory, $q, $window, $state) {
+    .controller("LoginController", function($scope, $stateParams, $ionicPopup, $timeout, LoginFactory, $q, $window, $state) {
         $scope.performLogin = function() {
 
-            //$scope.authenticate(false);
+            $scope.authenticate(false);
             console.log("clicked");
             // window.config = {
             //     clientId: '6d87a008-e330-43c1-b280-6fdf0fb0c490',
@@ -53,12 +53,12 @@ angular
                    $scope.associateId = userId[0];
                    
                 //Check if logged member is associate
-                   DashboardFactory.getAssociate($scope.associateId).then(
+                   LoginFactory.getAssociate($scope.associateId).then(
                     function(success) {
                       if(success.data == undefined)
                       {
                           //Check if logged member is Master
-                        DashboardFactory.getMaster($scope.associateId).then(
+                    LoginFactory.getMaster($scope.associateId).then(
                             function(success) {
                               if(success.data == undefined)
                               {
