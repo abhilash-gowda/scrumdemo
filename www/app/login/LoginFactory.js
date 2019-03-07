@@ -1,6 +1,8 @@
 'use strict';
 
 angular.module('starter').factory("LoginFactory", function($q, $http) {
+	 var factory = {
+    };
 
     factory.getAssociate = function(obj) {
         var d = $q.defer();
