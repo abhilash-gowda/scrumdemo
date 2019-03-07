@@ -4,7 +4,7 @@ angular.module('starter').factory("LoginFactory", function($q, $http) {
 	 var factory = {
     };
 
-    factory.getAssociate = function() {
+    factory.getAssociate = function(obj) {
 		console.log(obj)
         var d = $q.defer();
         $http({
