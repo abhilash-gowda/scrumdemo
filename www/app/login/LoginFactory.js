@@ -10,7 +10,7 @@ angular.module('starter').factory("LoginFactory", function($q, $http) {
         $http({
 
             method: 'GET',
-            url: 'http://10.182.234.181:1337/associates',
+            url: 'http://10.182.234.181:1337/associates?associate_id='+obj,
             data: obj,
             headers: {
                 'Content-Type': 'application/json'
@@ -28,7 +28,7 @@ angular.module('starter').factory("LoginFactory", function($q, $http) {
         $http({
 
             method: 'GET',
-            url: 'http://10.182.234.181:1337/masters',
+            url: 'http://10.182.234.181:1337/masters?associateId='+obj,
             data: obj,
             headers: {
                 'Content-Type': 'application/json'
