@@ -23,8 +23,6 @@ angular
         }
         $scope.members = [];
         
-        
-
 
           //check logged user type
           $scope.checkUserType = function() {
@@ -35,12 +33,15 @@ angular
                         $scope.isMaster = false;
                         $scope.getLoggedInUserDetails();
                         $scope.getAgilePriciples();
-						$scope.loadDashBoard();
+                        $scope.loadDashBoard();
                     } else {
                         $scope.isMaster = true;
+
                         $scope.getTeam();
-                        $scope.getAgilePriciples();
-                    }
+                        $scope.getLoggedInMasterDetails();
+                        $scope.loadDash();
+                        $scope.getAgile();
+                     }
                 },
                 function(error) {
                     console.log(error);
@@ -48,18 +49,23 @@ angular
             );
         };
 
-
-
+        $scope.associates = [];
         //get logged in user details
         $scope.getLoggedInUserDetails = function() {
             DashboardFactory.getLoggedInUserDetails(loggedUserId).then(
                 function(success) {
                     $scope.loggedUserDetails = success.data[0];
-                    $scope.associates = [];
+                    
+                
+                  
+                    console.group($scope.loggedUserDetails)
+
                     //Generate Dashboard graphs
                     $scope.getLoggedInUserPointsForGraph();
                     //Get History
                     $scope.getHistory();
+
+
 
                     DashboardFactory.getAssociateDetails($scope.loggedUserDetails.team.id).then(
                         function(success) {
@@ -71,27 +77,30 @@ angular
                                     rewards: [],
                                  };
 
+                                 console.log(eachAssociate)
+
                                 eachAssociate.name = element.name;
                                 $scope.memberID = element.id;
                                 eachAssociate.id = element.id;
                                 
-                             
-                    DashboardFactory.getScrumPoints($scope.memberID).then(
-                        function(success) {
-                            var memberPoints = 0;
-                            for (var eachPoint = 0; eachPoint < success.data.length; eachPoint++) {
-                                var today = success.data[eachPoint].created_at;
-                                if (moment().format("MM") === moment(today).format("MM"))
-                                    memberPoints += parseInt(success.data[eachPoint].point);
+
+                        DashboardFactory.getScrumPoints($scope.memberID).then(
+                            function(success) {
+                                var memberPoints = 0;
+                                for (var eachPoint = 0; eachPoint < success.data.length; eachPoint++) {
+                                    var today = success.data[eachPoint].created_at;
+                                    if (moment().format("MM") === moment(today).format("MM"))
+                                        memberPoints += parseInt(success.data[eachPoint].point);
+                                }
+                                eachAssociate.points = memberPoints;
+                                $scope.associates.push(eachAssociate);
+                                console.log($scope.associates)
+                                
+                            },
+                            function(error) {
+                                console.log(error);
                             }
-                            eachAssociate.points = memberPoints;
-                            $scope.associates.push(eachAssociate);
-                            
-                        },
-                        function(error) {
-                            console.log(error);
-                        }
-                    );
+                        );
 
                     DashboardFactory.getAgileRewards($scope.memberID).then(
                         function(success) {
@@ -117,8 +126,93 @@ angular
                         function(error) {
                             console.log(error);
                         }
-                    );
+                    )      
+                });     
+            },
+            function(error) {
+                console.log(error);
+            }
+        );
+                    $scope.teamAssociateDetails.associates = $scope.associates;     
+                    // console.log($scope.teamAssociateDetails.associates)
+                },
+                function(error) {
+                    console.log(error);
+                }
+            );
+        };
+    
+     
+
+
+        //NEW ADMIN
+        $scope.getLoggedInMasterDetails = function() {
+            DashboardFactory.getLoggedInMasterDetails(loggedUserId).then(
+                function(success) {
+                    $scope.loggedMasterDetails = success.data[0];
                     
+                    console.log($scope.loggedMasterDetails.teams[1].id)
+                    $scope.associates = [];
+                    DashboardFactory.getAssociateDetails($scope.loggedMasterDetails.teams[1].id).then(
+                        function(success) {
+                            success.data.forEach(function(element) {
+                               var eachAssociate = {
+                                    points: null,
+                                    name: null,
+                                    id: null,
+                                    rewards: [],
+                                 };
+console.log(eachAssociate)
+                                 eachAssociate.name = element.name;
+                                $scope.memberID = element.id;
+                                eachAssociate.id = element.id;
+                                
+                                DashboardFactory.getScrumPoints($scope.memberID).then(
+                                    function(success) {
+                                    var memberPoints = 0;
+                                    for (var eachPoint = 0; eachPoint < success.data.length; eachPoint++) {
+                                        var today = success.data[eachPoint].created_at;
+                                        if (moment().format("MM") === moment(today).format("MM"))
+                                            memberPoints += parseInt(success.data[eachPoint].point);
+                                    }
+                                    eachAssociate.points = memberPoints;
+                                    $scope.associates.push(eachAssociate);
+                                    console.log($scope.associates)
+                                    
+                                },
+                                function(error) {
+                                    console.log(error);
+                                }
+                                );
+
+                                DashboardFactory.getAgileRewards($scope.memberID).then(
+                                    function(success) {
+                                        $scope.memberRewards = [];
+                                        
+                                            for (
+                                                var eachReward = 0; eachReward < success.data.length; eachReward++
+                                            ) {
+                                                var today = success.data[eachReward].created_at;
+                                                if (moment().format("MM") === moment(today).format("MM"))
+                                                
+                                                var reward = success.data[eachReward].agileprinciple.principleId;
+                                                //since an rewards is an array in eachAssociate (pushing data directly)
+                                                if (reward != undefined)
+                                                {
+                                                eachAssociate.rewards.push(reward);
+                                                }
+                                            if (reward != null) {
+                                                $scope.allAssociate.allRewards.push(reward);
+                                            }
+                                        }
+                                    },
+                                    function(error) {
+                                        console.log(error);
+                                    }
+                                );
+                          
+                    
+                   
                 });
                 
             },
@@ -133,13 +227,10 @@ angular
                 }
             );
         };
-    
-
 
         
 
-
-
+       
 
 
 
@@ -244,7 +335,6 @@ angular
             DashboardFactory.getTeamDetails().then(
                 function(success) {
                     $scope.teamAssociateDetails.associates = success.data;
-                    console.log(success.data)
                 },
                 function(error) {
                     console.log(error);
@@ -386,9 +476,10 @@ angular
                         
                                 DashboardFactory.updatePoints(scrumPoints,id).then(
                                     function(success) {
-                                        $scope.loadDashBoard();
+                                       // $scope.loadDashBoard();
                                         console.log(success)
 
+                                        $scope.loadDashBoard();
                                     },
                                     function(error) {
                                         ionicToast.show(error, "bottom", false, 3500);
@@ -407,11 +498,98 @@ angular
 
             myPopup.then(function(res) {
                 
-        $scope.checkUserType();
                 console.log("Tapped!", res);
             });
         };
  
+
+
+
+        //ADMIN DASHBOARD
+        $scope.loadDash =  function() {
+            setTimeout(function() {
+            $scope.teamGraphAssociateName = [];
+            $scope.teamGraphAssociatePoints = [];
+            $scope.teamGraphAssignedRewardsAssociateName = [];
+            $scope.teamGraphAgileRewards =[];
+           
+            $scope.backgroundColors = [];
+            
+            $scope.associates.forEach(element => {
+                
+                $scope.teamGraphAssociateName.push(element.name);
+                $scope.teamGraphAssociatePoints.push(element.points);
+                if(element.rewards.length !='0'){
+                    $scope.teamGraphAssignedRewardsAssociateName.push(element.name)
+                    $scope.teamGraphAgileRewards.push(element.points);
+                     }
+         
+
+                $scope.backgroundColors.push($scope.getRandomColor());
+            });
+            var ctx = document.getElementById("teamChart");
+           
+            var ctx2 = document.getElementById("myChart2");
+
+            // console.log($scope.agileRewards.associate);
+
+            
+
+            new Chart(ctx, {
+                type: "pie",
+                data: {
+                    labels: $scope.teamGraphAssociateName,
+                    datasets: [{
+                        data: $scope.teamGraphAssociatePoints,
+                        backgroundColor: $scope.backgroundColors,
+                        borderWidth: 1.5
+                    }]
+                }
+            });
+            
+
+            var rewardData = {
+                labels :  $scope.rewardMembers,
+                datasets : $scope.Principles,
+                    
+                };
+           
+            new Chart(ctx2,{
+                type: 'bar',
+                data:rewardData,
+                options: {
+                            scales: {
+                        
+                                xAxes: [{
+                                    ticks: {
+                                        fontSize: 15
+                                    }
+                                }]
+                            }
+                        }
+              });
+
+
+        }, 1500);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -427,6 +605,7 @@ angular
 
             $scope.backgroundColors = [];
             $scope.associates.forEach(element => {
+                
                 $scope.teamGraphAssociateName.push(element.name);
                 $scope.teamGraphAssociatePoints.push(element.points);
                 if(element.rewards.length !='0'){
@@ -489,6 +668,7 @@ angular
             
             var rewardData = {
                 labels :  $scope.rewardMembers,
+                
                 datasets : $scope.Principles,
                     
                 };
@@ -513,12 +693,20 @@ angular
 
 
         $scope.getScrumPointsForMonth = function(month) {
+
+            
             DashboardFactory.getScrumPointsByMonth($scope.loggedUserDetails.id, month).then(
                 function(success) {
                     var memberPoints = 0;
-                    for (var i = 0; i < success.data.length; i++) {
-                        memberPoints += parseInt(success.data[i].point);
-                    }
+
+                    success.data.forEach(function(element) {
+                        memberPoints += parseInt(element.point)
+                });
+
+
+                //     for (var i = 0; i < success.data.length; i++) {
+                //         console.log(success.data[i].point)
+                //         memberPoints += parseInt(success.data[i].point); }
 
                     $scope.userGraphData.labels.push(moment(month).format('MMMM'));
                     
@@ -555,6 +743,107 @@ angular
        
 
 
+
+//admin reawrds graph
+
+
+        
+$scope.getAgile = function() {
+    
+    $scope.Principles = [];
+
+    DashboardFactory.getAgilePriciples()
+        .then(
+            function(success) {
+
+                $scope.agilerewards = success.data;
+
+                var principleData = [];
+              //  console.log(loggedUserId)
+              DashboardFactory.getLoggedInMasterDetails(loggedUserId).then(
+                function(success) {
+                    $scope.loggedMasterDetails = success.data[0];
+                    console.log($scope.loggedMasterDetails.teams[1].id)
+                    $scope.associates = [];
+                    DashboardFactory.getAssociateDetails($scope.loggedMasterDetails.teams[1].id).then(
+                        function(success) {
+ success.data.forEach(function(element) {
+
+
+                                     $scope.memberID = element.id;
+                            
+                                
+                    var current_month = (moment().format('YYYY-MM'))
+
+
+                    DashboardFactory.getAssociateNameRewards($scope.memberID, current_month).then(
+                    function(success) {
+                        var data = {
+                            associateName : null,
+                            associateReward : [],
+                                }
+                    success.data.forEach(function(element) {
+                    var name = element.toAssociate.name
+                    data.associateName = name;
+                    var reward = element.agileprinciple.agile_rewards
+                    data.associateReward.push(reward);
+                });   
+                if(data.associateName != null)
+                {
+                principleData.push(data);
+                }
+                 });
+            });
+        });
+    });
+ 
+
+                setTimeout(function() {
+                    //var assoSize = new Set($scope.agileRewards.associate).size;
+                    $scope.rewardMembers = []
+
+                    $scope.agilerewards.forEach(function(element) {
+                    var eachDataset = 
+                    {
+                        label :null,
+                        backgroundColor : $scope.getRandomColor(),
+                        data: [],
+                        stack : '1',
+                    }
+
+                    eachDataset.label = element.agile_rewards;
+                    principleData.forEach(function(element1, pos){
+                        // $scope.rewardMembers.push(element1.associateName);
+
+                        element1.associateReward.forEach(function(element2){
+                            if(element.agile_rewards === element2){
+                                
+                                for(var i = 0; i < principleData.length; i++){
+                                    if(i===pos){
+                                        eachDataset.data.push(1)
+                                    }else{
+                                        eachDataset.data.push(0)
+                                    }
+                                }
+                              }
+                        })    
+                    });   
+                    $scope.Principles.push(eachDataset)
+                });
+                principleData.forEach(function(element1, pos){
+                    $scope.rewardMembers.push(element1.associateName);
+            
+                });
+            },1000);
+          });
+            
+        $scope.agileRewards.agilePrinciple = $scope.Principles
+
+ };
+
+
+//ends here admin graph
+
 // Tab 3: Agile Rewards
         
         
@@ -569,14 +858,15 @@ $scope.getAgilePriciples = function() {
                 $scope.agilerewards = success.data;
 
                 var principleData = [];
+              //  console.log(loggedUserId)
                 DashboardFactory.getLoggedInUserDetails(loggedUserId).then(
+                  
                     function(success) {
                         
                         $scope.loggedUserDetails = success.data[0];
                         
                 DashboardFactory.getAssociateDetails($scope.loggedUserDetails.team.id).then(
                             function(success) {
-
                                 success.data.forEach(function(element) {
 
 
@@ -772,12 +1062,13 @@ $scope.getAgilePriciples = function() {
                 color += letters[Math.floor(Math.random() * 16)];
             }
             return color;
-        };     
-		 $scope.refresh = function(){
+        };    
+        
+        $scope.refresh = function(){
             $scope.associates = [];
             $scope.checkUserType();
         };
+     
         $scope.checkUserType();
-		
     });
 

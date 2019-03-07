@@ -31,6 +31,29 @@ angular.module('starter').factory("DashboardFactory", function($q, $http) {
         return d.promise;
     };
 
+     //get all details of logged in user
+
+     factory.getLoggedInMasterDetails = function(obj) {
+        var d = $q.defer();
+        $http({
+
+            method: 'GET',
+            url: 'http://10.182.234.181:1337/masters/?associateId=' + obj,
+            data: obj,
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(function(success) {
+            factory.loggedInMaster = success.data;
+            d.resolve(success);
+        }, function(error) {
+            d.reject(error)
+                // alert("Error. while created user Try Again!" + success);
+        });
+
+        return d.promise;
+    };
+
 
     // get associates of logged in user's teams
 
@@ -197,7 +220,7 @@ angular.module('starter').factory("DashboardFactory", function($q, $http) {
         var d = $q.defer();
         var date = moment().subtract(1, 'days').format('DD');
         if (month === moment().format('YYYY-MM')) {
-            var url = 'http://10.182.234.181:1337/scrumpoints?associate=' + obj + '&created_at_gte=' + month + '-01';
+            var url = 'http://10.182.234.181:1337/scrumpoints?associate=' + obj + '&created_at_gte=' + month + '-01&_sort=created_at:ASC';
         } 
         else{
             var url = 'http://10.182.234.181:1337/scrumpoints?associate=' + obj + '&created_at_gte=' + month + '-01&created_at_lte=' + month +'-'+date;

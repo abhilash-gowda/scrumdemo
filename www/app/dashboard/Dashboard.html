@@ -4,7 +4,8 @@
         <i class="icon icon " ng-show="showHistoryFilterIcon == true"></i>
         <h1 class="title">Scrum Manager</h1>
         <button class="button icon ion-plus-round" ng-show="isMaster === true" ng-click="selectTeamForAddUsers()" style="border: 0;"></button>
-		<ion-icon class="refresh" name ="refresh"  ng-click="refresh()"></ion-icon>
+        <ion-icon class="refresh" name ="refresh"  ng-click="refresh()"></ion-icon>
+        <!-- <i class="icon refresh ion-refresh" ng-show="isMaster === false" ng-click="hello()"></i> -->
     </div>
     <!-- <ion-side-menus>
         
@@ -18,8 +19,12 @@
             <ion-tab class="dash" title="Dashboard" icon-on="ion-bookmark" icon-off="ion-bookmark">
                 <ion-content class="has-tabs-top">
                     <div class="card graphCard">
-                        <div class="item item-divider">
+                        <div class="item item-divider" ng-if="!isMaster">
                             {{loggedUserDetails.team.name}}'s Scrum Points Chart
+                        </div>
+
+                        <div class="item item-divider" ng-if="isMaster">
+                            {{loggedMasterDetails.teams[1].name}}'s Scrum Points Chart
                         </div>
                         <div class="item item-text-wrap">
 
@@ -53,8 +58,11 @@
                     </div>
 
                     <div class="card graphCard">
-                        <div class="item item-divider">
+                        <div class="item item-divider" ng-if="!isMaster">
                             {{loggedUserDetails.team.name}}'s Agile Rewards Chart
+                        </div>
+                        <div class="item item-divider" ng-if="isMaster">
+                            {{loggedMasterDetails.teams[1].name}}'s Agile Rewards Chart
                         </div>
                         <div class="item item-text-wrap">
                             <canvas id="myChart2" width="400" height="400"></canvas>
@@ -65,22 +73,14 @@
 
             <ion-tab title="Scrum Points" class="points" icon-on="ion-clock" icon-off="ion-clock">
                 <ion-content class="has-header">
-                    <div class="list">
-                        <div ng-repeat="user in teamAssociateDetails.associates">
+                    <div class="list" ng-if="!isMaster">
+                        <div ng-repeat="user in teamAssociateDetails.associates" >
 
-                            <div class="item scrumPoints" ng-if="!isMaster">
+                            <div class="item scrumPoints" >
                                 {{user.name}}
                                 <span class="item-note">
                               {{user.points}}
                             </span>
-                            </div>
-
-                            <div class="item item-divider" ng-if="isMaster">
-                                {{user.name}}
-                            </div>
-
-                            <div class="item" ng-repeat="associate in user.associates">
-                                {{associate.name}}
                             </div>
 
                             <!-- <div class="item" ng-repeat="data in repeatData">
@@ -92,23 +92,55 @@
 
                         </div>
                     </div>
+
+                        <!-- MASTER SCCRUM POINTS -->  
+
+                    <div class="list" ng-if="isMaster">
+                        <div ng-repeat="user in associates" >
+
+                            <div class="item scrumPoints" >
+                                {{user.name}}
+                                <span class="item-note">
+                              {{user.points}}
+                            </span>
+                            </div>
+                         </div>
+                    </div>
                 </ion-content>
             </ion-tab>
+
+
             <ion-tab class="rewards" title="Agile Reward" icon-on="ion-bookmark" icon-off="ion-bookmark">
                 <ion-content class="has-header">
-                    <div class="list">
-                        <div ng-repeat="user in teamAssociateDetails.associates|orderBy: 'user.name':true">
-                            <div class="item">
-                                    
-                                {{user.name}}
-                                <span class="badge badge-assertive item-note" style="margin-left: 20px" ng-repeat="associate in user.rewards">
-                                {{associate}}
-                                </span>
-                                <ion-icon class="arrow-dropdown" name="arrow-dropdown" ng-if="user.id != loggedUserDetails.id" ng-if="!isMaster" ng-click="selectRewards(user)"></ion-icon>
-                                </ion-icon>
+                    <div class="list" ng-if="!isMaster">
+                            <div ng-repeat="user in teamAssociateDetails.associates|orderBy: 'user.name':true" >
+                                <div class="item">
+                                        
+                                    {{user.name}}
+                                    <span class="badge badge-assertive item-note" style="margin-left: 20px" ng-repeat="associate in user.rewards">
+                                    {{associate}}
+                                    </span>
+                                    <ion-icon class="arrow-dropdown" name="arrow-dropdown" ng-if="user.id != loggedUserDetails.id" ng-if="!isMaster" ng-click="selectRewards(user)" ></ion-icon>
+                                    </ion-icon>
+                                </div>
                             </div>
                         </div>
-                    </div>
+
+
+                        <!-- MASTER AGILE REWARDS -->   
+                        <!-- <div class="list" ng-if="isMaster">
+                            <div ng-repeat="user in teamAssociateDetails.associates|orderBy: 'user.name':true" >
+                                <div class="item">
+                                        
+                                    {{user.name}}
+                                    <span class="badge badge-assertive item-note" style="margin-left: 20px" ng-repeat="associate in user.rewards">
+                                    {{associate}}
+                                    </span>
+                                    <ion-icon class="arrow-dropdown" name="arrow-dropdown" ng-if="user.id != loggedUserDetails.id" ng-if="!isMaster" ng-click="selectRewards(user)" ></ion-icon>
+                                    </ion-icon>
+                                </div>
+                            </div>
+                        </div> -->
                 </ion-content>
             </ion-tab>
 
