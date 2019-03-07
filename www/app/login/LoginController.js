@@ -67,10 +67,10 @@ angular
 
                                 var IsMaster = success.data.length;
 
-                              if(IsAssociate || IsMaster )
+                              if(IsAssociate===1|| IsMaster===1 )
                               {
                                 $state.go('dashboard', { associateId: $scope.Id, accessToken: authResponse.accessToken });
-                            }
+                              }
                               else
                               {
                                 $state.go('home');
