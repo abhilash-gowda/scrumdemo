@@ -54,7 +54,7 @@ angular
 				   console.log($scope.Id)
                    
                 //Check if logged member is associate
-                   LoginFactory.getAssociate(userId[0]).then(
+                   LoginFactory.getAssociate($scope.Id).then(
                     function(success) {
                       if(success.data == undefined)
                       {
