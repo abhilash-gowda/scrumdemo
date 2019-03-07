@@ -52,5 +52,5 @@ angular.module('starter').factory("LoginFactory", function($q, $http) {
     };
 
 
-    
+    return factory;
 });
