@@ -104,7 +104,7 @@
                                 <span class="badge badge-assertive item-note" style="margin-left: 20px" ng-repeat="associate in user.rewards">
                                 {{associate}}
                                 </span>
-                                <ion-icon class="arrow-dropdown" name="arrow-dropdown" ng-if="!isMaster" ng-click="selectRewards(user)"></ion-icon>
+                                <ion-icon class="arrow-dropdown" name="arrow-dropdown" ng-if="user.id != loggedUserDetails.id" ng-if="!isMaster" ng-click="selectRewards(user)"></ion-icon>
                                 </ion-icon>
                             </div>
                         </div>
