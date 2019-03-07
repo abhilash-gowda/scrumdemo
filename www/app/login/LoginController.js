@@ -2,7 +2,7 @@
 
 angular
     .module("starter")
-    .controller("LoginController", function($scope, $stateParams, $ionicPopup, $timeout, LoginFactory, $q, $window, $state) {
+    .controller("LoginController", function($scope, LoginFactory) {
         $scope.performLogin = function() {
 
             //$scope.authenticate(false);
