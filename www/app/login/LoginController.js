@@ -56,12 +56,12 @@ angular
                 //Check if logged member is associate
                    LoginFactory.getAssociate($scope.Id).then(
                     function(success) {
-                      if(success.data == undefined)
+                      if(success.data.length == 0)
                       {
                           //Check if logged member is Master
                     LoginFactory.getMaster($scope.Id).then(
                             function(success) {
-                              if(success.data == undefined)
+                              if(success.data.length == 0)
                               {
                                 $state.go('home');
                               }
