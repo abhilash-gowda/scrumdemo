@@ -2,7 +2,7 @@
 
 angular
     .module("starter")
-    .controller("LoginController", function($scope, LoginFactory) {
+    .controller("LoginController", function($scope, LoginFactory,$window, $state) {
         $scope.performLogin = function() {
 
             //$scope.authenticate(false);
