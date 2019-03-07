@@ -50,15 +50,16 @@ angular
                     var uniqueId = authResponse.userInfo.uniqueId;
                     var userId = uniqueId.split("@");
                     console.log("true");
-                   //$scope.associateId = userId[0];
+                   $scope.Id = userId[0];
+				   console.log($scope.Id)
                    
                 //Check if logged member is associate
-                   LoginFactory.getAssociate(userId[0]).then(
+                   LoginFactory.getAssociate($scope.Id).then(
                     function(success) {
                       if(success.data == undefined)
                       {
                           //Check if logged member is Master
-                    LoginFactory.getMaster(userId[0]).then(
+                    LoginFactory.getMaster($scope.Id).then(
                             function(success) {
                               if(success.data == undefined)
                               {
@@ -66,7 +67,7 @@ angular
                               }
                               else
                               {
-                                $state.go('dashboard', { associateId: userId[0], accessToken: authResponse.accessToken });
+                                $state.go('dashboard', { associateId: $scope.Id, accessToken: authResponse.accessToken });
                               }
                                 
                             },
@@ -77,7 +78,7 @@ angular
                       }
                       else
                       {
-                        $state.go('dashboard', { associateId: userId[0], accessToken: authResponse.accessToken });
+                        $state.go('dashboard', { associateId: $scope.Id, accessToken: authResponse.accessToken });
                       }
                         
                     },
