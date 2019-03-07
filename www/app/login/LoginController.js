@@ -86,9 +86,6 @@ angular
                         console.log(error);
                     }
                 );
-
-
-                    $state.go('dashboard', { associateId: userId[0], accessToken: authResponse.accessToken });
                 }
                 console.log("Token acquired: " + authResponse.accessToken);
                 console.log("Token will expire on: " + authResponse.expiresOn);
