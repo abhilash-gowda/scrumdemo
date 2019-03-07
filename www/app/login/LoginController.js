@@ -50,6 +50,43 @@ angular
                     var uniqueId = authResponse.userInfo.uniqueId;
                     var userId = uniqueId.split("@");
                     console.log("true");
+                   $scope.associateId = userId[0];
+                   
+                //Check if logged member is associate
+                   DashboardFactory.getAssociate($scope.associateId).then(
+                    function(success) {
+                      if(success.data == undefined)
+                      {
+                          //Check if logged member is Master
+                        DashboardFactory.getMaster($scope.associateId).then(
+                            function(success) {
+                              if(success.data == undefined)
+                              {
+                                $state.go('home');
+                              }
+                              else
+                              {
+                                $state.go('dashboard', { associateId: $scope.associateId, accessToken: authResponse.accessToken });
+                              }
+                                
+                            },
+                            function(error) {
+                                console.log(error);
+                            }
+                        );
+                      }
+                      else
+                      {
+                        $state.go('dashboard', { associateId: $scope.associateId, accessToken: authResponse.accessToken });
+                      }
+                        
+                    },
+                    function(error) {
+                        console.log(error);
+                    }
+                );
+
+
                     $state.go('dashboard', { associateId: userId[0], accessToken: authResponse.accessToken });
                 }
                 console.log("Token acquired: " + authResponse.accessToken);
