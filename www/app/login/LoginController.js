@@ -51,36 +51,36 @@ angular
                     var userId = uniqueId.split("@");
                     console.log("true");
                    $scope.Id = userId[0];
-				   console.log($scope.Id)
+                   console.log($scope.Id)
+                   
+
                    
                 //Check if logged member is associate
                    LoginFactory.getAssociate($scope.Id).then(
                     function(success) {
-                      if(success.data.length == 0)
-                      {
+
+                     var IsAssociate = success.data.length;
+
                           //Check if logged member is Master
                     LoginFactory.getMaster($scope.Id).then(
                             function(success) {
-                              if(success.data.length == 0)
-                              {
-                                $state.go('home');
-                              }
-                              else
+
+                                var IsMaster = success.data.length;
+
+                              if(IsAssociate || IsMaster )
                               {
                                 $state.go('dashboard', { associateId: $scope.Id, accessToken: authResponse.accessToken });
+                            }
+                              else
+                              {
+                                $state.go('home');
                               }
                                 
                             },
                             function(error) {
                                 console.log(error);
                             }
-                        );
-                      }
-                      else
-                      {
-                        $state.go('dashboard', { associateId: $scope.Id, accessToken: authResponse.accessToken });
-                      }
-                        
+                        );         
                     },
                     function(error) {
                         console.log(error);
