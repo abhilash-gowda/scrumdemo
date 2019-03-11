@@ -436,6 +436,7 @@ console.log(eachAssociate)
         $scope.enterPinPopup = function() {
             $scope.enteredPin = {};
             $scope.getLoggedInUserDetails();
+			$scope.associates = [];
         
 
             // An elaborate, custom popup
@@ -449,44 +450,55 @@ console.log(eachAssociate)
                         text: "<b>Save</b>",
                         type: "button-positive",
                         onTap: function(e) {
-                             if (($scope.loggedUserDetails.team.pin) === ($scope.enteredPin.pin))
+                            if(($scope.loggedUserDetails.team.pin) === "-1" )
+                              {
+                                ionicToast.show("Invalid PIN", 'bottom', false, 3500);
+                              }
+                           else if (($scope.loggedUserDetails.team.pin) === ($scope.enteredPin.pin))
                             {
                                 var currentTime = moment().local();
-                                console.log(currentTime)
 
-                                var updatedTime = moment.utc($scope.loggedUserDetails.team.updated_at).local().format('HH:mm')
-                                console.log(updatedTime)
                                 var minutesDiff = currentTime.diff(moment.utc($scope.loggedUserDetails.team.updated_at), 'minutes')
-                                console.log(minutesDiff)
                                 
                                 var scrumPoints = 0;
                                 var id = $scope.loggedUserDetails.id;
                                 if (minutesDiff <= 1) {
                                     scrumPoints =  2;
-                                    ionicToast.show("Success", 'bottom', false, 3500);
-                                  }
+                                   }
                                   else if (minutesDiff <= 2) {
                                     scrumPoints =  1;
-                                    ionicToast.show("Success", 'bottom', false, 3500);
                                    }
                                   else 
                                   {
                                     ionicToast.show("PIN Expired", 'bottom', false, 3500);
                                   }
-                        
-                                DashboardFactory.updatePoints(scrumPoints,id).then(
-                                    function(success) {
-                                       // $scope.loadDashBoard();
-                                        console.log(success)
 
-                                        $scope.loadDashBoard();
+                                  var today = moment().format('YYYY-MM-DD')
+                                  DashboardFactory.checkForPoints(id,today).then(
+                                    function(success) {
+                                        if(success.data.length === 0)
+                                        {
+                                            DashboardFactory.updatePoints(scrumPoints,id).then(
+                                                function(success) {
+                                                    console.log(success)
+                                                    ionicToast.show("Success", 'bottom', false, 3500);
+                                                },
+                                                function(error) {
+                                                    ionicToast.show(error, "bottom", false, 3500);
+                                                }
+                                            );
+                                        }
+                                        else
+                                        {
+                                            ionicToast.show("You have submitted for today. Thank You", 'bottom', false, 3500);
+                                        }
+                                        
                                     },
                                     function(error) {
                                         ionicToast.show(error, "bottom", false, 3500);
                                     }
                                 );
-                               
-                            }
+                             }
                             else 
                               {
                                 ionicToast.show("Invalid PIN", 'bottom', false, 3500);
@@ -497,7 +509,7 @@ console.log(eachAssociate)
             });
 
             myPopup.then(function(res) {
-                
+                 $scope.loadDashBoard();
                 console.log("Tapped!", res);
             });
         };

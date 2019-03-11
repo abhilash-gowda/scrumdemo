@@ -426,5 +426,25 @@ angular.module('starter').factory("DashboardFactory", function($q, $http) {
 
         return d.promise;
     };
+	
+	  factory.checkForPoints= function(obj,today) {
+        var d = $q.defer();
+        $http({
+            method: 'GET',
+            url: 'http://10.182.234.181:1337/scrumpoints?associate='+obj+'&created_at_gte='+today+'T00:00:00.000Z',
+            data: obj,
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(function(success) {
+            d.resolve(success)
+        }, function(error) {
+            d.reject(error)
+                // alert("Error. while created user Try Again!" + success);
+        });
+        return d.promise;
+    };
+	
+	
     return factory;
 });
