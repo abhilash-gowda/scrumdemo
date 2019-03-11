@@ -117,7 +117,7 @@
                                 <div class="item">
                                         
                                     {{user.name}}
-                                    <span class="badge badge-assertive item-note" style="margin-left: 20px" ng-repeat="associate in user.rewards">
+                                    <span class="badge badge-assertive item-note" style="margin-left: 20px" ng-repeat="associate in user.rewards" ng-click="viewRewards(associate)">
                                     {{associate}}
                                     </span>
                                     <ion-icon class="arrow-dropdown" name="arrow-dropdown" ng-if="user.id != loggedUserDetails.id" ng-if="!isMaster" ng-click="selectRewards(user)" ></ion-icon>
@@ -128,19 +128,19 @@
 
 
                         <!-- MASTER AGILE REWARDS -->   
-                        <!-- <div class="list" ng-if="isMaster">
-                            <div ng-repeat="user in teamAssociateDetails.associates|orderBy: 'user.name':true" >
+                        <div class="list" ng-if="isMaster">
+                            <div ng-repeat="user in associates|orderBy: 'user.name':true" >
                                 <div class="item">
                                         
                                     {{user.name}}
                                     <span class="badge badge-assertive item-note" style="margin-left: 20px" ng-repeat="associate in user.rewards">
                                     {{associate}}
                                     </span>
-                                    <ion-icon class="arrow-dropdown" name="arrow-dropdown" ng-if="user.id != loggedUserDetails.id" ng-if="!isMaster" ng-click="selectRewards(user)" ></ion-icon>
-                                    </ion-icon>
+                                    <!-- <ion-icon class="arrow-dropdown" name="arrow-dropdown" ng-if="user.id != loggedUserDetails.id" ng-if="!isMaster" ng-click="selectRewards(user)" ></ion-icon>
+                                    </ion-icon> -->
                                 </div>
                             </div>
-                        </div> -->
+                        </div>
                 </ion-content>
             </ion-tab>
 
@@ -177,6 +177,17 @@
         <div ng-repeat="eachItem in historyFilter">
             <ion-list>
                 <ion-radio ng-model="choice" ng-value="{{eachItem}}" ng-click="filterHistory(eachItem)">{{eachItem}}</ion-radio>
+            </ion-list>
+
+        </div>
+    </ion-popover-view>
+</script>
+
+<script id="agileRewards/popover.html" type="text/ng-template">
+    <ion-popover-view class="agilePopover">
+        <div ng-repeat="rewards in agile">
+            <ion-list>
+               {{rewards}}
             </ion-list>
 
         </div>
