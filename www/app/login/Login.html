@@ -1,18 +1,11 @@
-
 <ion-view title="Login" class="home-view">
-    <div class="bar bar-header bar-positive">
-        <h1 class="title">Scrum Manager</h1>
-        <button class="button button-balanced" id="generateNumber" ng-click="selectTeam()" ng-show="isMaster === true">+</button>
-    </div>
-    <ion-content class="has-header has-footer login background" scroll="false">
-            <!-- class="background" scroll="false" -->
-        <div class="wrapper">
-            <button class="button loginButton" ng-click='performLogin()'>
-                Login
+    <ion-content class="background" scroll="false">
+        <!-- class="background" scroll="false" -->
+        <div class="login">
+            <img src="img/Cerner.png" alt="Cerner Logo" width="60%" class="loginImage">
+            <button class="button button-positive loginButton" ng-click="performLogin()">
+                Associate Login
             </button>
         </div>
     </ion-content>
-    <div class="bar bar-footer bar-positive">
-        <div class="title"></div>
-    </div>
 </ion-view>

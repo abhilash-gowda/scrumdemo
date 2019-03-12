@@ -12,7 +12,7 @@
     "dependencies": {
         "@ionic-native/core": "^5.1.0",
         "@ionic-native/ms-adal": "^5.1.0",
-        "cordova-android": "7.1.4",
+        "cordova-android": "^7.1.4",
         "cordova-android-support-gradle-release": "^2.0.1",
         "cordova-plugin-compat": "^1.2.0",
         "cordova-plugin-device": "^2.0.2",

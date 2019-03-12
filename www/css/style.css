@@ -17,22 +17,30 @@
 }
 
 .login {
-    background-color: #e8e8e8;
+    position: relative;
+    height: 100%;
+    width: 100%;
+    text-align: center;
+}
+
+.loginImage {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 40%;
+    margin: auto;
+}
+
+.loginButton {
+    top: 90%;
+    left: 0;
+    right: 0;
+    width: 90%;
 }
 
 .wrapper {
     text-align: center;
-}
-
-.loginButton {
-    position: absolute;
-    background-color: #387ef5;
-    top: 70%;
-    left: 175px;
-    color: white;
-    font-size: large;
-    padding: 4px 52px;
-    left : 135px;
 }
 
 .historyFilter {
@@ -58,23 +66,28 @@
 .item .badge+.badge {
     margin-right: 40px !important;
 }
+
 .item .badge+.badge+.badge {
     margin-right: 80px !important;
 }
+
 .item .badge+.badge+.badge+.badge {
     margin-right: 120px !important;
 }
-.arrow-dropdown{
-        float: right;
-        font-size: 28px;
-        color: #33cd5f
+
+.arrow-dropdown {
+    float: right;
+    font-size: 28px;
+    color: #6f6e6e;
 }
+
 .item .badge {
     display: flex;
     position: absolute;
     top: 16px;
     right: 50px;
 }
+
 .rewardsPopUp {
     float: none;
     color: #444;
@@ -82,16 +95,12 @@
     padding: 15px;
 }
 
-.selectAgileRewards {
-    padding: 12px;
-    overflow: auto;
-    width: 300px;
-}
-.scrumPoints{
+.scrumPoints {
     padding: 20px;
 }
-.popup{
-    width:auto;
+
+.popup {
+    width: auto;
 }
 
 .refresh {
@@ -101,23 +110,11 @@
     float: right;
 }
 
-.background.scroll-content{
-    background: url(/img/Cerner.png) no-repeat; 
-    background-color: white;
-    top: -150px;
-    background-size: 220px;
-    background-position: center
-   
-    }
-
- .game{
-     color:#387ef5;
-     font-size: 19px;
-     padding: 80px;
- }
- .scrum{
-    color:chartreuse;
-    font-size: 19px;
-    padding: 15px;
-    margin-top: 40px;
+.game {
+    text-align: center;
+    margin-top: 50%;
+    font-size: 35px;
+    line-height: normal;
+    color: #676767;
+    font-weight: bold;
 }
