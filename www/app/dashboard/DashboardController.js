@@ -11,12 +11,12 @@ angular.module("starter").controller("DashboardController", function($scope, $st
         allRewards: [],
     }
 
-    //used for rewards graph.
+    //agile rewards graph data
     $scope.agileRewards ={
         agilePrinciple : []
     }      
 
-    //check logged user type
+    //check logged user type [associate/master]
     $scope.loadDashBoardScreen = function() {
     DashboardFactory.checkUserType(loggedUserId).then(
         function(success) {
@@ -36,9 +36,9 @@ angular.module("starter").controller("DashboardController", function($scope, $st
         );
     };
 
-    //get logged in user details
+    
+    //get logged in associate details
     $scope.getLoggedInUserDetails = function () {
-        console.log("user");
         DashboardFactory.getLoggedInUserDetails(loggedUserId).then(
             function (success) {
                 $scope.loggedUserDetails = success.data[0];
@@ -55,6 +55,7 @@ angular.module("starter").controller("DashboardController", function($scope, $st
         );
     };
 
+    //get logged in master details
     $scope.getLoggedInMasterDetails = function () {
         DashboardFactory.getLoggedInMasterDetails(loggedUserId).then(
             function (success) {
@@ -74,10 +75,10 @@ angular.module("starter").controller("DashboardController", function($scope, $st
         );
     };
 
+    //get associates current months stats [scrumpoints, agile rewrads] based on teams
     $scope.getUserDataByTeam = function (teamId, teamName) {
         DashboardFactory.getAssociateDetails(teamId).then(
             function (success) {
-                console.log(success.data);
                 var associate = {
                     teamName: teamName,
                     associate: []
@@ -94,7 +95,7 @@ angular.module("starter").controller("DashboardController", function($scope, $st
                     var memberID = element.id;
                     eachAssociate.id = element.id;
 
-
+                    //get current month scrum points [TAB 2]
                     DashboardFactory.getScrumPoints(memberID).then(
                         function (success) {
                             var memberPoints = 0;
@@ -110,17 +111,16 @@ angular.module("starter").controller("DashboardController", function($scope, $st
                             console.log(error);
                         }
                     );
-
+                    
+                    //get current month agile rewards [TAB 3]
                     DashboardFactory.getAgileRewards(memberID).then(
                         function (success) {
                             $scope.memberRewards = [];
-
-                            for (var eachReward = 0; eachReward < success.data.length; eachReward++) {
+                            for(var eachReward = 0; eachReward < success.data.length; eachReward++) {
                                 var today = success.data[eachReward].created_at;
                                 if (moment().format("MM") === moment(today).format("MM"))
 
-                                    var reward = success.data[eachReward].agileprinciple.principleId;
-                                //since an rewards is an array in eachAssociate (pushing data directly)
+                                var reward = success.data[eachReward].agileprinciple.principleId;
                                 if (reward != undefined) {
                                     eachAssociate.rewards.push(reward);
                                 }
@@ -134,11 +134,8 @@ angular.module("starter").controller("DashboardController", function($scope, $st
                         }
                     )
                     associate.associate.push(eachAssociate);
-
-
-                });
+                 });
                 $scope.teamAssociateDetails.push(associate);
-                console.log($scope.teamAssociateDetails)
             },
             function (error) {
                 console.log(error);
@@ -151,20 +148,18 @@ angular.module("starter").controller("DashboardController", function($scope, $st
 
 
     // Add Users to teams -- Start   
+
     $scope.selectTeamForAddUsers = function () {
         $scope.data = {};
         var selectTeamForAddUsersPopup = null;
-        // Custom popup
+        // Custom popup for team selection
         selectTeamForAddUsersPopup = $ionicPopup.show({
-            //<button class="button button-balanced" id="generateNumber" ng-click="verifyPinGeneration(team)"> + </button>
             template: '<div class="list"><div class="item" ng-click="addUsersToTeam(team)" ng-repeat="team in teamAssociateDetails.teams" ">{{team.name}}</div></div>',
             title: "Select Team",
             scope: $scope,
-
             buttons: [{ text: "Cancel", type: "button-positive" }]
         });
     }
-
 
     $scope.addUsersToTeam = function (team) {
         DashboardFactory.getLoggedUserPeopleDetails($stateParams.accessToken).then(
@@ -173,9 +168,9 @@ angular.module("starter").controller("DashboardController", function($scope, $st
                 $scope.searchPeopleDetails = success.data.value;
                 var addUsersPopup = null;
                 addUsersPopup = $ionicPopup.show({
-                    //<button class="button button-balanced" id="generateNumber" ng-click="verifyPinGeneration(team)"> + </button>
-                    template: '<label class="item-input-wrapper textbox-search"><i class="icon ion-ios7-search placeholder-icon"></i><input type="search" placeholder="Search" ng-model="searchData.value" ng-keyup="searchPeople()" style = "background-color: #eeeeee;"></label><div class="list"><div class="item" ng-click="addAssociateToTeam(eachPeople)" ng-repeat="eachPeople in searchPeopleDetails" ">{{eachPeople.displayName}}</div></div>',
-                    title: "Search Member",
+                    template: '<label class="item-input-wrapper textbox-search"><i class="icon ion-ios7-search placeholder-icon"></i><input type="search" placeholder="Must have at least 3 characters" ng-model="searchData.value" ng-keyup="searchPeople()" style = "background-color: #eeeeee;"></label><div class="list"><div class="item" ng-click="addAssociateToTeam(eachPeople)" ng-repeat="eachPeople in searchPeopleDetails" ">{{eachPeople.displayName}}</div></div>',
+                    title: "Search Associate",
+                    subtitle: "Assocaite ID",
                     scope: $scope,
                     buttons: [{ text: "Cancel", type: "button-positive" }]
                 });
@@ -204,8 +199,7 @@ angular.module("starter").controller("DashboardController", function($scope, $st
     $scope.addAssociateToTeam = function (user) {
         $scope.selectedTeamtoAdd;
         DashboardFactory.addAssociateToTeam(user.displayName, user.userPrincipalName.split("@")[0], $scope.selectedTeamtoAdd.id).then(
-            function (success) {
-
+            function (success) {    
             },
             function (error) {
                 ionicToast.show(error, "bottom", false, 3500);
@@ -215,19 +209,17 @@ angular.module("starter").controller("DashboardController", function($scope, $st
     // Add Users to teams -- End
 
 
-    //Get Principles and graph
+    //Get Principles and agile rewards graph
+
     $scope.getAgilePrinciplesByTeam = function (teamId) {
-        console.log(teamId);
         $scope.Principles = [];
 
         DashboardFactory.getAgilePriciples()
             .then(function (success) {
-                console.log(success.data)
                 $scope.agilerewards = success.data;
                 var principleData = [];
                 DashboardFactory.getAssociateDetails(teamId).then(
                     function (success) {
-                        console.log(success.data)
                         success.data.forEach(function (element) {
                             $scope.memberID = element.id;
                             var current_month = (moment().format('YYYY-MM'))
@@ -252,7 +244,6 @@ angular.module("starter").controller("DashboardController", function($scope, $st
 
 
                 setTimeout(function () {
-                    //var assoSize = new Set($scope.agileRewards.associate).size;
                     $scope.rewardMembers = []
 
                     $scope.agilerewards.forEach(function (element) {
@@ -266,9 +257,7 @@ angular.module("starter").controller("DashboardController", function($scope, $st
 
                         eachDataset.label = element.agile_rewards;
                         principleData.forEach(function (element1, pos) {
-                            // $scope.rewardMembers.push(element1.associateName);
-
-                            element1.associateReward.forEach(function (element2) {
+                             element1.associateReward.forEach(function (element2) {
                                 if (element.agile_rewards === element2) {
 
                                     for (var i = 0; i < principleData.length; i++) {
@@ -289,13 +278,12 @@ angular.module("starter").controller("DashboardController", function($scope, $st
                     });
                     $scope.loadDashBoard(0);
                     $scope.agileRewards.agilePrinciple = $scope.Principles
-                console.log($scope.agileRewards.agilePrinciple);
                 }, 1000);
                 
             });
     };
 
-    $scope.masterSelectTeamGraph = function(team){
+    $scope.masterSelectRewardGraph = function(team){
         $scope.getAgilePrinciplesByTeam(team.id);
     }
 
@@ -307,12 +295,12 @@ angular.module("starter").controller("DashboardController", function($scope, $st
 
 
 
-    // enter pin pop up
+    //admin pin generation module
     $scope.selectTeam = function () {
         $scope.data = {};
         $scope.getLoggedInMasterDetails();
         var myPopup = null;
-        // Custom popup
+        // Custom popup for team selection
         myPopup = $ionicPopup.show({
             template: '<div class="list"><div class="item"  ng-click="verifyPinGeneration(team)" ng-repeat="team in teamAssociateDetails.teams" ">{{team.name}} <span class="item-note">{{team.pin}}</span> </div></div>',
             title: "Generate Pin",
@@ -322,7 +310,7 @@ angular.module("starter").controller("DashboardController", function($scope, $st
         });
     }
 
-    //pin generation
+    //pin generation confirmation 
     $scope.verifyPinGeneration = function (team) {
         $ionicPopup.show({
             title: "ARE YOU SURE",
@@ -339,6 +327,7 @@ angular.module("starter").controller("DashboardController", function($scope, $st
         });
     };
 
+    //pin generation method
     $scope.generateNumber = function (team) {
         if (team.pin != -1) {
             $scope.updatePin("-1", team);
@@ -350,11 +339,10 @@ angular.module("starter").controller("DashboardController", function($scope, $st
             );
             $scope.showPinPopup();
             $scope.updatePin($scope.randomNumber, team);
-
-        }
+         }
     };
 
-    //update pin
+    //update pin in database
     $scope.updatePin = function (randomNumber, team) {
         DashboardFactory.updatePin(randomNumber, team).then(
             function (success) {
@@ -365,8 +353,7 @@ angular.module("starter").controller("DashboardController", function($scope, $st
         );
     };
 
-
-    //pin random pop up
+    //view pin on random pop up
     $scope.showPinPopup = function () {
         // An elaborate, custom popup
         $ionicPopup.show({
@@ -389,7 +376,7 @@ angular.module("starter").controller("DashboardController", function($scope, $st
         $scope.getLoggedInUserDetails();
 
 
-        // An elaborate, custom popup
+        //Custom popup to enter pin
         var myPopup = $ionicPopup.show({
             template: '<input type="text" ng-model="enteredPin.pin">',
             title: "Enter PIN",
@@ -419,12 +406,16 @@ angular.module("starter").controller("DashboardController", function($scope, $st
                             }
 
                             var today = moment().format('YYYY-MM-DD')
+
+                            //check for todays updation on scrumpoints
                             DashboardFactory.checkForPoints(id, today).then(
                                 function (success) {
                                     if (success.data.length === 0) {
+                                        //update scrum points
                                         DashboardFactory.updatePoints(scrumPoints, id).then(
                                             function (success) {
                                                 ionicToast.show("Success", 'bottom', false, 3500);
+                                                $scope.loadDashBoard(0);
                                             },
                                             function (error) {
                                                 ionicToast.show(error, "bottom", false, 3500);
@@ -434,7 +425,6 @@ angular.module("starter").controller("DashboardController", function($scope, $st
                                     else {
                                         ionicToast.show("You have submitted for today. Thank You", 'bottom', false, 3500);
                                     }
-
                                 },
                                 function (error) {
                                     ionicToast.show(error, "bottom", false, 3500);
@@ -449,7 +439,7 @@ angular.module("starter").controller("DashboardController", function($scope, $st
             ]
         });
         myPopup.then(function (res) {
-            $scope.loadDashBoard(0);
+            
         });
     };
 
@@ -496,14 +486,12 @@ angular.module("starter").controller("DashboardController", function($scope, $st
                         datasets: [{
                             data: $scope.userGraphData.data,
                             backgroundColor: $scope.userGraphData.colors,
-                            // labels: ['October', 'November', 'December']
                         }],
 
                         // These labels appear in the legend and in the tooltips when hovering different arcs
                         labels: $scope.userGraphData.labels
 
                     },
-                    // options: options
                     options: {
                         scales: {
                             yAxes: [{
@@ -582,6 +570,7 @@ angular.module("starter").controller("DashboardController", function($scope, $st
         $scope.historyFilter.push(previous2Month);
     };
 
+    //Check for availability of rewards
     $scope.checkAvailability = function (reward) {
         var val = false
         $scope.allAssociate.allRewards.forEach(function (element) {
@@ -595,8 +584,9 @@ angular.module("starter").controller("DashboardController", function($scope, $st
             return true;
     };
         
-        //select rewards from ionic pop up
+    //Select rewards from ionic pop up
     $scope.selectRewards = function (toUser) {
+        // document.getElementsByClassName("rewardsList")[0].parentElement.parentElement.style.width = "300px"
         $scope.toAssociate = toUser
         $scope.data = {};
         var agileRewardsPopUp = null;
@@ -608,7 +598,8 @@ angular.module("starter").controller("DashboardController", function($scope, $st
             buttons: [{ text: "Cancel", type: "button-positive" }]
         });
     };
-        
+
+    //Assign Rewards for team associates
     $scope.assignRewards = function (agileprinciple, fromAssociate, toAssociate) {
         DashboardFactory.assignRewards(agileprinciple, fromAssociate, toAssociate).then(
             function (success) {
@@ -636,7 +627,6 @@ angular.module("starter").controller("DashboardController", function($scope, $st
             }
         );
     }
-
 
     $scope.showHistoryFilter = function () {
         $scope.showHistoryFilterIcon = true;
@@ -680,7 +670,7 @@ angular.module("starter").controller("DashboardController", function($scope, $st
         };
     }
 
-    //RANDOM COLORS
+    //Random color generator for graphs
     $scope.getRandomColor = function () {
         var letters = "0123456789ABCDEF";
         var color = "#";
@@ -690,10 +680,20 @@ angular.module("starter").controller("DashboardController", function($scope, $st
         return color;
     };
 
+    //rewards view on badge click
+    $scope.viewRewards = function(id){
+        for(var i = 0; i< $scope.agilerewards.length ; i++){
+            if(id === $scope.agilerewards[i].principleId)
+            ionicToast.show($scope.agilerewards[i].agile_rewards, "bottom", false, 3500);
+        }
+       };
+
+
+    //Refresh function
     $scope.refresh = function () {
         $scope.loadDashBoardScreen();
     };
 
-
+    //Initial service.
     $scope.loadDashBoardScreen();
 });

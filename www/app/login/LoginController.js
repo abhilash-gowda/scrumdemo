@@ -1,10 +1,10 @@
 "use strict";
 
-angular.module("starter").controller("LoginController", function($scope, LoginFactory,$window, $state) {
+angular.module("starter").controller("LoginController", function($scope,DashboardFactory, LoginFactory,$window, $state,ionicToast) {
         $scope.performLogin = function() {
 
             //$scope.authenticate(false);
-            console.log("clicked");
+            
             // window.config = {
             //     clientId: '6d87a008-e330-43c1-b280-6fdf0fb0c490',
             //     // redirectUri: 'https://login.microsoftonline.com/common/oauth2/nativeclient',
@@ -32,64 +32,76 @@ angular.module("starter").controller("LoginController", function($scope, LoginFa
             //         }
             //     }
             // })
-
-        
-
-        var authority = "https://login.windows.net/cernerprod.onmicrosoft.com/";
-        var resourceUri = "https://graph.microsoft.com";
-        var clientId = "6d87a008-e330-43c1-b280-6fdf0fb0c490";
-
-        var authContext = new $window.Microsoft.ADAL.AuthenticationContext(authority);
-
-        authContext.acquireTokenAsync(resourceUri, clientId, "http://localhost:8100/")
-            .then(function(authResponse) {
-                console.log(authResponse)
-                if (authResponse.accessToken) {
-                    var uniqueId = authResponse.userInfo.uniqueId;
-                    var userId = uniqueId.split("@");
-                    console.log("true");
-                   $scope.Id = userId[0];
-                   console.log($scope.Id)
-                   
-
-                   
-                //Check if logged member is associate
-                   LoginFactory.getAssociate($scope.Id).then(
-                    function(success) {
-
-                     var IsAssociate = success.data.length;
-
-                          //Check if logged member is Master
-                    LoginFactory.getMaster($scope.Id).then(
-                            function(success) {
-
-                                var IsMaster = success.data.length;
-
-                              if(IsAssociate===1|| IsMaster===1 )
-                              {
-                                $state.go('dashboard', { associateId: $scope.Id, accessToken: authResponse.accessToken });
-                              }
-                              else
-                              {
-                                $state.go('home');
-                              }
-                                
-                            },
-                            function(error) {
-                                console.log(error);
-                            }
-                        );         
-                    },
-                    function(error) {
-                        console.log(error);
+            DashboardFactory.getAgilePriciples().then(
+                function(success) {
+                    if(success.status === 200)
+                    {
+                        console.log(success)
+                        
+                        console.log("clicked");
+                        var authority = "https://login.windows.net/cernerprod.onmicrosoft.com/";
+                        var resourceUri = "https://graph.microsoft.com";
+                        var clientId = "6d87a008-e330-43c1-b280-6fdf0fb0c490";
+                
+                        var authContext = new $window.Microsoft.ADAL.AuthenticationContext(authority);
+                
+                        authContext.acquireTokenAsync(resourceUri, clientId, "http://localhost:8100/")
+                            .then(function(authResponse) {
+                                console.log(authResponse)
+                                if (authResponse.accessToken) {
+                                    var uniqueId = authResponse.userInfo.uniqueId;
+                                    var userId = uniqueId.split("@");
+                                    console.log("true");
+                                   $scope.Id = userId[0];
+                                   console.log($scope.Id)
+                                 
+                                   //Check if logged member is associate
+                                   LoginFactory.getAssociate($scope.Id).then(
+                                    function(success) {
+                
+                                     var IsAssociate = success.data.length;
+                
+                                    //Check if logged member is Master
+                                    LoginFactory.getMaster($scope.Id).then(
+                                            function(success) {
+                
+                                              var IsMaster = success.data.length;
+                
+                                              if(IsAssociate===1|| IsMaster===1 )
+                                              {
+                                                $state.go('dashboard', { associateId: $scope.Id, accessToken: authResponse.accessToken });
+                                              }
+                                              else
+                                              {
+                                                $state.go('home');
+                                              }
+                                                
+                                            },
+                                            function(error) {
+                                                console.log(error);
+                                            }
+                                        );         
+                                    },
+                                    function(error) {
+                                        console.log(error);
+                                    }
+                                );
+                                }
+                                console.log("Token acquired: " + authResponse.accessToken);
+                                console.log("Token will expire on: " + authResponse.expiresOn);
+                            }, function(err) {
+                                console.log("Failed to authenticate: " + err);
+                            });
                     }
-                );
+                    else
+                    {
+                        ionicToast.show("Make sure you are in proper network", "bottom", false, 3500);
+                    }
+                },
+                function(error) {
+                    console.log(error);
                 }
-                console.log("Token acquired: " + authResponse.accessToken);
-                console.log("Token will expire on: " + authResponse.expiresOn);
-            }, function(err) {
-                console.log("Failed to authenticate: " + err);
-            });
+            );      
     }
 
         // var AzureB2C = {
@@ -179,6 +191,4 @@ angular.module("starter").controller("LoginController", function($scope, LoginFa
 
         //     return deferred.promise;
         // };
-
-
     });

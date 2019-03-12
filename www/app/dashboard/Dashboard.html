@@ -58,7 +58,7 @@
                                     <div class="input-label" style="padding: unset;">
                                         Select Team
                                     </div>
-                                    <select style="position: inherit;background: none;" name="teams" id="teams" ng-model="masterSelectedTeam" ng-options="team.name for team in teamAssociateDetails.teams" ng-change="masterSelectTeamGraph(masterSelectedTeam)">
+                                    <select style="position: inherit;background: none;" name="teams" id="teams" ng-model="masterSelectedTeam" ng-options="team.name for team in teamAssociateDetails.teams" ng-change="masterSelectRewardGraph(masterSelectedTeam)">
                                     </select>
                                 </div>
 
@@ -111,8 +111,8 @@
                             <div class="item">
 
                                 {{user.name}}
-                                <span class="badge badge-assertive item-note" style="margin-left: 20px" ng-repeat="associate in user.rewards" ng-click="viewRewards(associate)">
-                                    {{associate}}
+                                <span class="badge badge-assertive item-note" style="margin-left: 20px" ng-repeat="rewardId in user.rewards" ng-click="viewRewards(rewardId)">
+                                    {{rewardId}}
                                     </span>
                                 <ion-icon class="arrow-dropdown" name="arrow-dropdown" ng-if="user.id != loggedUserDetails.id" ng-if="!isMaster" ng-click="selectRewards(user)"></ion-icon>
                                 </ion-icon>

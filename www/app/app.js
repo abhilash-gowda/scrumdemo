@@ -34,19 +34,7 @@ angular
                 });
             });
 
-            //   firebase.initializeApp({
-            //     apiKey: 'AIzaSyBhZOkz5-U1OChjAkcAcV3T2PdU1hc0Gvs',
-            //     // authDomain: '### FIREBASE AUTH DOMAIN ###',
-            //     projectId: 'scrum-manager-3e90e'
-            //   });
-
-            //   // Initialize Cloud Firestore through Firebase
-            //   var db = firebase.firestore();
-
-            // Disable deprecated features
-            //   db.settings({
-            //     timestampsInSnapshots: true
-            //   });
+            
 
             $ionicPlatform.registerBackButtonAction(function(e) {
                 if ($state.is("home")) {
