@@ -101,8 +101,8 @@ angular
 
         $stateProvider
             .state("dashboard", {
-                // url: "/dashboard/:associateId/:accessToken",
-                url: "/dashboard/:associateId",
+                url: "/dashboard/:associateId/:accessToken",
+                // url: "/dashboard/:associateId",
                 cache: false,
                 templateUrl: "app/dashboard/Dashboard.html",
                 controller: "DashboardController"

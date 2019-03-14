@@ -25,7 +25,7 @@
                                     <div class="input-label" style="padding: unset;">
                                         Select Team
                                     </div>
-                                    <select style="position: inherit;background: none;" name="teams" id="teams" ng-model="masterSelectedTeam" ng-options="team.name for team in teamAssociateDetails.teams" ng-change="masterSelectScrumGraph(masterSelectedTeam)">
+                                    <select style="position: inherit;background: none;" name="teams" id="teams" ng-model="masterSelectedScrumTeam" ng-options="team.name for team in teamAssociateDetails.teams| orderBy:'team.name'" ng-change="masterSelectScrumGraph(masterSelectedScrumTeam)">
                                     </select>
                                 </div>
 

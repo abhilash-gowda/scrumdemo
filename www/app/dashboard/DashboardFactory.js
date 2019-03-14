@@ -5,7 +5,8 @@ angular.module('starter').factory("DashboardFactory", function($q, $http) {
         teamList: [],
         checkedPin: null,
         loggedInUser: {},
-        loggedInMaster: {}
+        loggedInMaster: {},
+        isRefreshing: false
     };
 
     //get associate details
@@ -340,7 +341,44 @@ angular.module('starter').factory("DashboardFactory", function($q, $http) {
         });
         return d.promise;
     };
-	
+
+    factory.getLoggedUserPeopleDetails = function(obj) {
+        var d = $q.defer();
+        $http({
+
+            method: 'GET',
+            url: 'https://graph.microsoft.com/v1.0/me/people?$top=30',
+            headers: {
+                'Authorization': 'Bearer ' + obj
+            }
+        }).then(function(success) {
+            console.log(success);
+            d.resolve(success);
+        }, function(error) {
+            console.log(error)
+            d.reject(error)
+                // alert("Error. while created user Try Again!" + success);
+        });
+
+        return d.promise;
+    };
+
+    //check if associates is already part of scrum manager
+    factory.checkAssociateinTeam = function (id) {
+        var d = $q.defer();
+        $http({
+            method: 'GET',
+            url: 'http://10.182.234.181:1337/associates?associate_id=' + id,
+
+        }).then(function (success) {
+            d.resolve(success);
+        }, function (error) {
+            console.log(error)
+            d.reject(error)
+        });
+
+        return d.promise;
+    };
 	
     return factory;
 });
