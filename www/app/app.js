@@ -37,7 +37,7 @@ angular
             
 
             $ionicPlatform.registerBackButtonAction(function(e) {
-                if ($state.is("home")) {
+                if ($state.is("dashboard")) {
                     if (confirm("Are you sure you want to Exit?")) {
                         ionic.Platform.exitApp();
                         return false;
@@ -74,10 +74,6 @@ angular
         $ionicConfigProvider.tabs.position("top");
         // $ionicConfigProvider.platform.android.tabs.position("bottom");
         $ionicConfigProvider.views.swipeBackEnabled(false);
-        // $locationProvider.html5Mode({
-        //     enabled: true,
-        //     requireBase: false
-        // });
         $httpProvider.interceptors.push(function($rootScope) {
             return {
                 request: function(config) {

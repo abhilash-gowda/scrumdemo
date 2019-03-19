@@ -118,3 +118,13 @@
     color: #676767;
     font-weight: bold;
 }
+
+.ion-content .ion-scroll {
+    height: 100%;
+}
+
+.generatePinButton {
+    font-size: 20px;
+    font-weight: bold;
+    margin-right: 4px
+}

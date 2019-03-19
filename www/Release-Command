@@ -1,0 +1,17 @@
+----------------Scrum Manager app---------------------
+
+cordova build --release android
+
+jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore scrumapp.p12 /Users/kk035231/scrumapp/platforms/android/app/build/outputs/apk/release/app-release-unsigned.apk scrumapp
+
+jarsigner -verify -verbose -certs /Users/kk035231/scrumapp/platforms/android/app/build/outputs/apk/release/app-release-unsigned.apk
+
+/Users/kk035231/Library/Android/sdk/build-tools/26.0.2/zipalign -v 4 /Users/kk035231/scrumapp/platforms/android/app/build/outputs/apk/release/app-release-unsigned.apk ScrumManager.apk
+
+--------credentials--------------
+
+keystore: scrumapp.p12
+password: changeit
+
+alias: scrumapp
+password: 

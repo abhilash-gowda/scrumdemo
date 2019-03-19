@@ -9,14 +9,14 @@
     <ion-content class="has-footer">
         <ion-tabs class="tabs-positive tabs-icon-top">
             <ion-tab class="dash" title="Dashboard" icon-on="ion-pie-graph" icon-off="ion-pie-graph">
-                <ion-content class="has-tabs-top">
+                <ion-content class="has-tabs-top has-footer">
                     <div class="card graphCard">
                         <div class="item item-divider" ng-if="!isMaster">
                             {{loggedUserDetails.team.name}}'s Scrum Points
                         </div>
 
                         <div class="item item-divider" ng-if="isMaster">
-                            {{loggedMasterDetails.teams[1].name}}'s Scrum Points
+                            {{masterSelectedScrumTeam.name}}'s Scrum Points
                         </div>
                         <div class="item item-text-wrap">
                             <div class="item-note" style="padding-bottom: 42px;" ng-if="isMaster">
@@ -25,7 +25,7 @@
                                     <div class="input-label" style="padding: unset;">
                                         Select Team
                                     </div>
-                                    <select style="position: inherit;background: none;" name="teams" id="teams" ng-model="masterSelectedScrumTeam" ng-options="team.name for team in teamAssociateDetails.teams| orderBy:'team.name'" ng-change="masterSelectScrumGraph(masterSelectedScrumTeam)">
+                                    <select style="position: inherit;background: none;" name="teams" id="teams" ng-model="selected.masterScrumTeam" ng-options="team.name for team in teamAssociateDetails.teams| orderBy:'team.name'" ng-change="masterSelectScrumGraph(masterSelectedScrumTeam)">
                                     </select>
                                 </div>
 
@@ -49,7 +49,7 @@
                         </div>
 
                         <div class="item item-divider" ng-if="isMaster">
-                            {{loggedMasterDetails.teams[1].name}}'s Agile Rewards
+                            {{masterSelectedTeam.name}}'s Agile Rewards
                         </div>
                         <div class="item item-text-wrap">
                             <div class="item-note" style="padding-bottom: 42px;" ng-if="isMaster">
@@ -58,7 +58,7 @@
                                     <div class="input-label" style="padding: unset;">
                                         Select Team
                                     </div>
-                                    <select style="position: inherit;background: none;" name="teams" id="teams" ng-model="masterSelectedTeam" ng-options="team.name for team in teamAssociateDetails.teams" ng-change="masterSelectRewardGraph(masterSelectedTeam)">
+                                    <select style="position: inherit;background: none;" name="teams" id="teams" ng-model="selected.masterRewardTeam" ng-options="team.name for team in teamAssociateDetails.teams" ng-change="masterSelectRewardGraph(masterSelectedTeam)">
                                     </select>
                                 </div>
 
@@ -70,7 +70,7 @@
             </ion-tab>
 
             <ion-tab title="Scrum Points" class="points" icon-on="ion-clock" icon-off="ion-clock">
-                <ion-content class="has-header">
+                <ion-content class="has-header has-footer">
                     <div class="list" ng-if="!isMaster">
                         <div ng-repeat="user in teamAssociateDetails[0].associate">
                             <div class="item scrumPoints">
@@ -105,7 +105,7 @@
 
 
             <ion-tab class="rewards" title="Agile Reward" icon-on="ion-bookmark" icon-off="ion-bookmark">
-                <ion-content class="has-header">
+                <ion-content class="has-header has-footer">
                     <div class="list" ng-if="!isMaster">
                         <div ng-repeat="user in teamAssociateDetails[0].associate|orderBy: 'user.name':true">
                             <div class="item">
@@ -130,7 +130,7 @@
                             <div ng-repeat="user in user.associate">
                                 <div class="item scrumPoints">
                                     {{user.name}}
-                                    <span class="badge badge-assertive item-note" style="margin-left: 20px" ng-repeat="reward in user.rewards">
+                                    <span class="badge badge-assertive item-note" style="margin-left: 20px" ng-repeat="reward in user.rewards track by $index">
                                         {{reward}}
                                     </span>
                                 </div>
@@ -141,7 +141,7 @@
             </ion-tab>
 
             <!-- <ion-tab class="history"  title="History" icon-on="ion-bookmark" icon-off="ion-bookmark" on-select="showHistoryFilter()" on-deselect="hideHistoryFilter()">
-                <ion-content class="has-header">
+                <ion-content class="has-header has-footer">
 
                     <div class="item item-divider">
                         Date ('DD-MM-YYYY')
