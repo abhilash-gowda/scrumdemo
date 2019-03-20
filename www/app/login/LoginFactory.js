@@ -25,15 +25,9 @@ angular.module('starter').factory("LoginFactory", function ($q, $http) {
             method: 'GET',
           };
         cordova.plugin.http.sendRequest(url + '/masters?associateId=' + obj, options, function(response) {
-            // prints 200
-            console.log(response);
             d.resolve(response)
           }, function(response) {
-            // prints 403
-            console.log(response.status);
             d.reject(response.error)
-            //prints Permission denied
-            console.log(response.error);
           });
         return d.promise;
     };
