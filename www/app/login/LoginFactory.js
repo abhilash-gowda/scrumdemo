@@ -7,37 +7,34 @@ angular.module('starter').factory("LoginFactory", function ($q, $http) {
     var url = "https://ctsgreetingsbeta.cerner.com";
 
     factory.getAssociate = function (obj) {
-        var d = $q.defer();
-        $http({
+          const options = {
             method: 'GET',
-            url: url + '/associates?associate_id=' + obj,
-            data: obj,
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        }).then(function (success) {
-            d.resolve(success)
-        }, function (error) {
-            d.reject(error)
-        });
+          };
+          var d = $q.defer();
+          cordova.plugin.http.sendRequest(url + '/associates?associate_id=' + obj, options, function(response) {
+            d.resolve(response)
+          }, function(response) {
+            d.reject(response.error)
+          });
         return d.promise;
     };
 
     factory.getMaster = function (obj) {
         var d = $q.defer();
-        $http({
+        const options = {
             method: 'GET',
-            url: url + '/masters?associateId=' + obj,
-            data: obj,
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        }).then(function (success) {
-            d.resolve(success)
-        }, function (error) {
-            d.reject(error)
-            // alert("Error. while created user Try Again!" + success);
-        });
+          };
+        cordova.plugin.http.sendRequest(url + '/masters?associateId=' + obj, options, function(response) {
+            // prints 200
+            console.log(response);
+            d.resolve(response)
+          }, function(response) {
+            // prints 403
+            console.log(response.status);
+            d.reject(response.error)
+            //prints Permission denied
+            console.log(response.error);
+          });
         return d.promise;
     };
 

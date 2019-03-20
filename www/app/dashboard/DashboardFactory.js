@@ -180,19 +180,25 @@ angular.module('starter').factory("DashboardFactory", function ($q, $http) {
     //get all agile principles
     factory.getAgilePriciples = function () {
         var d = $q.defer();
-        $http({
+        cordova.plugin.http.setSSLCertMode('pinned', function() {
+            console.log('success!');
+          }, function() {
+            console.log('error :(');
+          });
+          const options = {
             method: 'GET',
-            url: url + '/agileprinciples?_sort=principleId:ASC',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-
-        }).then(function (success) {
-            d.resolve(success)
-        }, function (error) {
-            d.reject(error)
-        });
-
+          };
+          cordova.plugin.http.sendRequest(url + '/agileprinciples?_sort=principleId:ASC', options, function(response) {
+            // prints 200
+            console.log(response);
+            d.resolve(response)
+          }, function(response) {
+            // prints 403
+            console.log(response.status);
+            d.reject(response.error)
+            //prints Permission denied
+            console.log(response.error);
+          });
         return d.promise;
     };
 
