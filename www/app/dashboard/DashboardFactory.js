@@ -13,64 +13,81 @@ angular.module('starter').factory("DashboardFactory", function ($q, $http) {
 
     //get associate details
     factory.getLoggedInUserDetails = function (obj) {
-        const options = {
-            method: 'GET',
-          };
         var d = $q.defer();
-
-        cordova.plugin.http.sendRequest(url + '/associates?associate_id=' + obj, options, function(response) {
-            d.resolve(response)
-          }, function(response) {
-            d.reject(response.error)
-          });
+        $http({
+            method: 'GET',
+            url: url + '/associates/?associate_id=' + obj,
+            data: obj,
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(function (success) {
+            factory.loggedInUser = success.data;
+            d.resolve(success);
+        }, function (error) {
+            d.reject(error)
+        });
 
         return d.promise;
     };
 
     //get master details
     factory.getLoggedInMasterDetails = function (obj) {
-        const options = {
-            method: 'GET',
-          };
         var d = $q.defer();
-        
-        cordova.plugin.http.sendRequest(url + '/masters?associateId=' + obj, options, function(response) {
-            d.resolve(response)
-          }, function(response) {
-            d.reject(response.error)
-          });
+        $http({
+            method: 'GET',
+            url: url + '/masters/?associateId=' + obj,
+            data: obj,
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(function (success) {
+            factory.loggedInMaster = success.data;
+            d.resolve(success);
+        }, function (error) {
+            d.reject(error)
+        });
+
         return d.promise;
     };
 
 
     // get associates of logged in users team
     factory.getAssociateDetails = function (obj) {
-         const options = {
-            method: 'GET',
-          };
         var d = $q.defer();
-        
-        cordova.plugin.http.sendRequest(url + '/associates?team=' + obj, options, function(response) {
-            d.resolve(response)
-          }, function(response) {
-            d.reject(response.error)
-          });
+        $http({
+            method: 'GET',
+            url: url + '/associates?team=' + obj,
+            data: obj,
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(function (success) {
+            factory.loggedInUserTeam = success.data;
+            d.resolve(success)
+        }, function (error) {
+            d.reject(error)
+        });
+
         return d.promise;
     };
 
     //Check if master or associate
-    factory.checkUserType = function (obj) {
-        const options = {
-            method: 'GET',
-          };
+    factory.checkUserType = function (loggedUserId) {
         var d = $q.defer();
-
-        cordova.plugin.http.sendRequest(url + '/masters?associateId=' + obj, options, function(response) {
-            d.resolve(response)
-          }, function(response) {
-            d.reject(response.error)
-          });
-
+        $http({
+            method: 'GET',
+            url: url + '/masters?associateId=' + loggedUserId,
+            data: loggedUserId,
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(function (success) {
+            factory.loggedInMaster = success.data;
+            d.resolve(success)
+        }, function (error) {
+            d.reject(error)
+        });
         return d.promise;
     };
 
@@ -79,35 +96,39 @@ angular.module('starter').factory("DashboardFactory", function ($q, $http) {
         var obj = {
             "pin": pin
         }
-       
-        const options = {
-            method: 'PUT',
-            data: obj
-          };
         var d = $q.defer();
-
-        cordova.plugin.http.sendRequest(url + '/teams/' + team.id, options, function(response) {
-            d.resolve(response)
-          }, function(response) {
-            d.reject(response.error)
-          });
+        $http({
+            method: 'PUT',
+            url: url + '/teams/' + team.id,
+            data: obj,
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(function (success) {
+            d.resolve(success)
+        }, function (error) {
+            d.reject(error)
+        });
 
         return d.promise;
     };
 
     //get scrumpoints of logged in user's teams
     factory.getScrumPoints = function (obj) {
-        const options = {
-            method: 'GET',
-          };
         var d = $q.defer();
-
-        cordova.plugin.http.sendRequest(url + '/scrumpoints?associate=' + obj + '&_sort=point:ASC', options, function(response) {
-            d.resolve(response)
-          }, function(response) {
-            d.reject(response.error)
-          });
-
+        $http({
+            method: 'GET',
+            url: url + '/scrumpoints?associate=' + obj + '&_sort=point:ASC',
+            data: obj,
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(function (success) {
+            factory.loggedInUserTeam = success.data;
+            d.resolve(success)
+        }, function (error) {
+            d.reject(error)
+        });
         return d.promise;
     };
 
@@ -121,36 +142,37 @@ angular.module('starter').factory("DashboardFactory", function ($q, $http) {
         else {
             var customUrl = url + '/scrumpoints?associate=' + obj + '&created_at_gte=' + month + '-01&created_at_lte=' + month + '-' + date;
         }
-        
-
-        const options = {
+        $http({
             method: 'GET',
-          };
-        var d = $q.defer();
-        
-        cordova.plugin.http.sendRequest(customUrl, options, function(response) {
-            d.resolve(response)
-          }, function(response) {
-            d.reject(response.error)
-          });
-        return d.promise;
+            url: customUrl,
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(function (success) {
+            d.resolve(success);
+        }, function (error) {
+            d.reject(error)
+        });
 
-        
+        return d.promise;
     };
 
 
     //get agile rewards assigen for a user
     factory.getAgileRewards = function (obj) {
-        const options = {
-            method: 'GET',
-          };
         var d = $q.defer();
-
-        cordova.plugin.http.sendRequest(url + '/rewards?toAssociate=' + obj, options, function(response) {
-            d.resolve(response)
-          }, function(response) {
-            d.reject(response.error)
-          });
+        $http({
+            method: 'GET',
+            url: url + '/rewards?toAssociate=' + obj,
+            data: obj,
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(function (success) {
+            d.resolve(success)
+        }, function (error) {
+            d.reject(error)
+        });
 
         return d.promise;
     };
@@ -158,17 +180,19 @@ angular.module('starter').factory("DashboardFactory", function ($q, $http) {
     //get all agile principles
     factory.getAgilePriciples = function () {
         var d = $q.defer();
-        cordova.plugin.http.setSSLCertMode('pinned', function() {
-          }, function() {
-          });
-          const options = {
+        $http({
             method: 'GET',
-          };
-          cordova.plugin.http.sendRequest(url + '/agileprinciples?_sort=principleId:ASC', options, function(response) {
-            d.resolve(response)
-          }, function(response) {
-            d.reject(response.error)
-          });
+            url: url + '/agileprinciples?_sort=principleId:ASC',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+
+        }).then(function (success) {
+            d.resolve(success)
+        }, function (error) {
+            d.reject(error)
+        });
+
         return d.promise;
     };
 
@@ -179,19 +203,19 @@ angular.module('starter').factory("DashboardFactory", function ($q, $http) {
             "toAssociate": toAssociate,
             "fromAssociate": fromAssociate
         }
-
-        const options = {
-            method: 'POST',
-            data: obj
-          };
         var d = $q.defer();
-
-        cordova.plugin.http.sendRequest(url + '/rewards/', options, function(response) {
-            d.resolve(response)
-          }, function(response) {
-            d.reject(response.error)
-          });
-
+        $http({
+            method: 'POST',
+            url: url + '/rewards/',
+            data: obj,
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(function (success) {
+            d.resolve(success)
+        }, function (error) {
+            d.reject(error)
+        });
 
         return d.promise;
     };
@@ -204,18 +228,19 @@ angular.module('starter').factory("DashboardFactory", function ($q, $http) {
                 "id": id
             }
         }
-
-        const options = {
-            method: 'POST',
-            data: obj
-          };
         var d = $q.defer();
-
-        cordova.plugin.http.sendRequest( url + '/scrumpoints/', options, function(response) {
-            d.resolve(response)
-          }, function(response) {
-            d.reject(response.error)
-          });
+        $http({
+            method: 'POST',
+            url: url + '/scrumpoints/',
+            data: obj,
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(function (success) {
+            d.resolve(success)
+        }, function (error) {
+            d.reject(error)
+        });
 
         return d.promise;
     };
@@ -227,19 +252,18 @@ angular.module('starter').factory("DashboardFactory", function ($q, $http) {
         if (month === moment().format('YYYY-MM')) {
             var customUrl = url + '/rewards?toAssociate=' + obj + '&created_at_gte=' + month + '-01T00:00:00.000Z';
         }
-        
-        const options = {
+        $http({
             method: 'GET',
-            data: obj
-          };
-        var d = $q.defer();
-
-        cordova.plugin.http.sendRequest(customUrl, options, function(response) {
-            d.resolve(response)
-          }, function(response) {
-            d.reject(response.error)
+            url: customUrl,
+            data: obj,
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(function (success) {
+            d.resolve(success);
+        }, function (error) {
+            d.reject(error)
         });
-
 
         return d.promise;
     };
@@ -261,8 +285,6 @@ angular.module('starter').factory("DashboardFactory", function ($q, $http) {
         });
 
         return d.promise;
-
-        
     };
 
     //add associates for a team
@@ -273,41 +295,42 @@ angular.module('starter').factory("DashboardFactory", function ($q, $http) {
             "associate_id": id,
             "team": teamId
         }
-        const options = {
+        $http({
+            data: obj,
             method: 'POST',
-            data: obj
-          };
-        var d = $q.defer();
+            url: url + '/associates',
 
-        cordova.plugin.http.sendRequest(url + '/associates', options, function(response) {
-            d.resolve(response)
-          }, function(response) {
-            d.reject(response.error)
-          });
+        }).then(function (success) {
+            d.resolve(success);
+        }, function (error) {
+            console.log(error)
+            d.reject(error)
+        });
 
         return d.promise;
     };
 
     //check if scrumpoints already updated today
     factory.checkForPoints = function (obj, today) {
-        const options = {
-            method: 'GET',
-          };
         var d = $q.defer();
-
-        cordova.plugin.http.sendRequest(url + '/scrumpoints?associate=' + obj + '&created_at_gte=' + today + 'T00:00:00.000Z', options, function(response) {
-            d.resolve(response)
-          }, function(response) {
-            d.reject(response.error)
-          });
-
+        $http({
+            method: 'GET',
+            url: url + '/scrumpoints?associate=' + obj + '&created_at_gte=' + today + 'T00:00:00.000Z',
+            data: obj,
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(function (success) {
+            d.resolve(success)
+        }, function (error) {
+            d.reject(error)
+        });
         return d.promise;
     };
 
     factory.getLoggedUserPeopleDetails = function (obj) {
         var d = $q.defer();
         $http({
-
 
             method: 'GET',
             url: 'https://graph.microsoft.com/v1.0/me/people?$top=30',
@@ -324,37 +347,38 @@ angular.module('starter').factory("DashboardFactory", function ($q, $http) {
         });
 
         return d.promise;
-        
     };
 
     //check if associates is already part of scrum manager
-    factory.checkAssociateinTeam = function (obj) {
-        const options = {
-            method: 'GET',
-          };
+    factory.checkAssociateinTeam = function (id) {
         var d = $q.defer();
+        $http({
+            method: 'GET',
+            url: url + '/associates?associate_id=' + id,
 
-        cordova.plugin.http.sendRequest(url + '/associates?associate_id=' + obj, options, function(response) {
-            d.resolve(response)
-          }, function(response) {
-            d.reject(response.error)
-          });
+        }).then(function (success) {
+            d.resolve(success);
+        }, function (error) {
+            console.log(error)
+            d.reject(error)
+        });
 
         return d.promise;
     };
 
     //check if master is already part of scrum manager
-    factory.checkMasterinTeam = function (obj) {
-         const options = {
-            method: 'GET',
-          };
+    factory.checkMasterinTeam = function (id) {
         var d = $q.defer();
+        $http({
+            method: 'GET',
+            url: url + '/masters?associateId=' + id,
 
-        cordova.plugin.http.sendRequest(url + '/masters?associateId=' +  + obj, options, function(response) {
-            d.resolve(response)
-          }, function(response) {
-            d.reject(response.error)
-          });
+        }).then(function (success) {
+            d.resolve(success);
+        }, function (error) {
+            console.log(error)
+            d.reject(error)
+        });
 
         return d.promise;
     };

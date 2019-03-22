@@ -7,28 +7,37 @@ angular.module('starter').factory("LoginFactory", function ($q, $http) {
     var url = "https://ctsgreetingsbeta.cerner.com";
 
     factory.getAssociate = function (obj) {
-          const options = {
+        var d = $q.defer();
+        $http({
             method: 'GET',
-          };
-          var d = $q.defer();
-          cordova.plugin.http.sendRequest(url + '/associates?associate_id=' + obj, options, function(response) {
-            d.resolve(response)
-          }, function(response) {
-            d.reject(response.error)
-          });
+            url: url + '/associates?associate_id=' + obj,
+            data: obj,
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(function (success) {
+            d.resolve(success)
+        }, function (error) {
+            d.reject(error)
+        });
         return d.promise;
     };
 
     factory.getMaster = function (obj) {
         var d = $q.defer();
-        const options = {
+        $http({
             method: 'GET',
-          };
-        cordova.plugin.http.sendRequest(url + '/masters?associateId=' + obj, options, function(response) {
-            d.resolve(response)
-          }, function(response) {
-            d.reject(response.error)
-          });
+            url: url + '/masters?associateId=' + obj,
+            data: obj,
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(function (success) {
+            d.resolve(success)
+        }, function (error) {
+            d.reject(error)
+            // alert("Error. while created user Try Again!" + success);
+        });
         return d.promise;
     };
 

@@ -453,12 +453,12 @@ angular.module("starter").controller("DashboardController", function ($scope, $s
                             var scrumPoints = 0;
                             var id = $scope.loggedUserDetails.id;
                             console.log(minutesDiff);
-                            if (minutesDiff <= 1) {
+                            if (minutesDiff <= 5) {
                                 scrumPoints = 2;
                             }
-                            // else if (minutesDiff <= 1) {
-                            //     scrumPoints = 1;
-                            // }
+                            else if (minutesDiff <= 10) {
+                                scrumPoints = 1;
+                            }
                             else {
                                 ionicToast.show("PIN Expired", 'bottom', false, 3500);
                                 return;

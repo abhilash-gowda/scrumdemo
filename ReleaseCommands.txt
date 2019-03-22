@@ -1,0 +1,25 @@
+----------------Scrum Manager app---------------------
+
+cordova build --release android
+
+open cmd as administrator and enter the commands in jdk\bin folder
+
+jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore my-release-key.keystore /Users/kk035231/scrumapp/platforms/android/app/build/outputs/apk/release/app-release-unsigned.apk my-key-alias
+
+jarsigner -verify -verbose -certs /Users/kk035231/scrumapp/platforms/android/app/build/outputs/apk/release/app-release-unsigned.apk
+
+/Users/kk035231/Library/Android/sdk/build-tools/26.0.2/zipalign -v 4 /Users/kk035231/scrumapp/platforms/android/app/build/outputs/apk/release/app-release-unsigned.apk ScrumManager.apk
+
+--------credentials--------------
+
+keystore: my-release-key.keystore
+password: changeit
+
+alias: my-key-alias
+password: 
+
+
+
+
+
+keytool -import -file scrum.cer -keystore 

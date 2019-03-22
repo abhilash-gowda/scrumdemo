@@ -57,6 +57,7 @@ angular.module("starter").controller("LoginController", function ($scope, Dashbo
                                         //Check if logged member is Master
                                         LoginFactory.getMaster($scope.Id).then(
                                             function (success) {
+                                                console.log(success)
                                                 var IsMaster = success.data.length;
                                                 if (IsAssociate === 1 || IsMaster === 1) {
                                                     $state.go('dashboard', { associateId: $scope.Id, accessToken: authResponse.accessToken });
