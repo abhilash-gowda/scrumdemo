@@ -79,11 +79,14 @@ angular.module("starter").controller("DashboardController", function ($scope, $s
                     teamDetails.push(element);
                 });
                 $scope.teamAssociateDetails.teams = teamDetails;
+                setTimeout(function(){
+                console.log($scope.teamAssociateDetails);
                 $scope.selected.masterRewardTeam = $scope.teamAssociateDetails.teams[0];
                 $scope.selected.masterScrumTeam = $scope.teamAssociateDetails.teams[0];
-                // console.log($scope.masterSelectedScrumTeam)
+                console.log($scope.selected.masterScrumTeam);
                 $scope.loadScrumGraph(0);
                 $scope.getAgilePrinciplesByTeam(success.data[0].teams[0].id);
+                },50)
             },
             function (error) {
                 console.log(error);
@@ -151,6 +154,7 @@ angular.module("starter").controller("DashboardController", function ($scope, $s
                     )
                     associate.associate.push(eachAssociate);
                 });
+                console.log($scope.teamAssociateDetails);
                 $scope.teamAssociateDetails.push(associate);
                 var x = $scope.teamAssociateDetails.sort(function (a, b) {
                     var p = a.teamName.toLowerCase();
@@ -160,6 +164,16 @@ angular.module("starter").controller("DashboardController", function ($scope, $s
                     return 0;
                 });
                 $scope.teamAssociateDetails = x;
+                if ($scope.isMaster) {
+                    var x = $scope.teamAssociateDetails.teams.sort(function (a, b) {
+                        var p = a.name.toLowerCase();
+                        var q = b.name.toLowerCase();
+                        if (p < q) { return -1; }
+                        if (p > q) { return 1; }
+                        return 0;
+                    });
+                    $scope.teamAssociateDetails.teams = x;
+                }
             },
             function (error) {
                 console.log(error);
@@ -305,7 +319,7 @@ angular.module("starter").controller("DashboardController", function ($scope, $s
 
                 setTimeout(function () {
                     $scope.rewardMembers = []
-
+                    $scope.Principles = [];
                     $scope.agilerewards.forEach(function (element) {
                         var eachDataset =
                         {
@@ -335,6 +349,7 @@ angular.module("starter").controller("DashboardController", function ($scope, $s
                         $scope.rewardMembers.push(element1.associateName);
 
                     });
+                    console.log($scope.Principles);
                     $scope.agileRewards.agilePrinciple = $scope.Principles;
                     $scope.loadRewardsGraph();
                 }, 200);
@@ -344,12 +359,18 @@ angular.module("starter").controller("DashboardController", function ($scope, $s
 
     $scope.masterSelectRewardGraph = function (team) {
         // $scope.masterSelectedTeam = team
-        $scope.getAgilePrinciplesByTeam(team.id);
+        if(team == null)
+            $scope.getAgilePrinciplesByTeam(0);
+        else
+            $scope.getAgilePrinciplesByTeam(team.id);
     }
 
     $scope.masterSelectScrumGraph = function (team) {
         // $scope.masterSelectedScrumTeam = team
-        $scope.loadScrumGraph($scope.teamAssociateDetails.teams.indexOf(team));
+        if(team == null)
+            $scope.loadScrumGraph(0);
+        else
+            $scope.loadScrumGraph($scope.teamAssociateDetails.teams.indexOf(team));
     }
 
     //admin pin generation module
@@ -474,7 +495,7 @@ angular.module("starter").controller("DashboardController", function ($scope, $s
                                         DashboardFactory.updatePoints(scrumPoints, id).then(
                                             function (success) {
                                                 ionicToast.show("Thank You for attending Scrum", 'bottom', false, 3500);
-                                                $scope.loadScrumGraph(0);
+                                                $scope.refresh();
                                             },
                                             function (error) {
                                                 ionicToast.show(error, "bottom", false, 3500);
@@ -506,6 +527,7 @@ angular.module("starter").controller("DashboardController", function ($scope, $s
     // Tab 1 : Dashboard
 
     $scope.loadScrumGraph = function (index) {
+        console.log(index);
         setTimeout(function () {
             $scope.teamGraphAssociateName = [];
             $scope.teamGraphAssociatePoints = [];
@@ -571,6 +593,8 @@ angular.module("starter").controller("DashboardController", function ($scope, $s
                 datasets: $scope.Principles,
 
             };
+
+            console.log($scope.Principles);
 
             new Chart(ctx2, {
                 type: 'bar',
@@ -642,11 +666,12 @@ angular.module("starter").controller("DashboardController", function ($scope, $s
     };
 
     //Select rewards from ionic pop up
+    var agileRewardsPopUp = null;
     $scope.selectRewards = function (toUser) {
         // document.getElementsByClassName("rewardsList")[0].parentElement.parentElement.style.width = "300px"
         $scope.toAssociate = toUser
         $scope.data = {};
-        var agileRewardsPopUp = null;
+        
         agileRewardsPopUp = $ionicPopup.show({
             template: '<div class="list"> <div class="item" ng-repeat="rewards in agilerewards"  > <div ng-click="assignRewards(rewards.id,loggedUserDetails.id,toAssociate.id)" ng-class="{disabled: checkAvailability(rewards)}">{{rewards.principleId}}<span class="item-note rewardsPopUp">{{rewards.agile_rewards}}</span></div></div></div>',
             title: "Select Agile Rewards",
@@ -661,7 +686,7 @@ angular.module("starter").controller("DashboardController", function ($scope, $s
         DashboardFactory.assignRewards(agileprinciple, fromAssociate, toAssociate).then(
             function (success) {
                 agileRewardsPopUp.close();
-                $scope.loadDashBoardScreen();
+                $scope.refresh();
                 ionicToast.show("Success", 'bottom', false, 3500);
             },
             function (error) {
@@ -747,6 +772,7 @@ angular.module("starter").controller("DashboardController", function ($scope, $s
 
     //refresh Screens
     $scope.refresh = function () {
+        $scope.teamAssociateDetails = [];
         if (!DashboardFactory.isRefreshing)
             $scope.loadDashBoardScreen();
         DashboardFactory.isRefreshing = true;

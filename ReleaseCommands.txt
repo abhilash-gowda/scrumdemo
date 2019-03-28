@@ -4,7 +4,7 @@ cordova build --release android
 
 open cmd as administrator and enter the commands in jdk\bin folder
 
-jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore my-release-key.keystore /Users/kk035231/scrumapp/platforms/android/app/build/outputs/apk/release/app-release-unsigned.apk my-key-alias
+jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore ctsgreetingsbeta.cerner.com.pfx /Users/kk035231/scrumapp/platforms/android/app/build/outputs/apk/release/app-release-unsigned.apk 8045729e-a248-4c60-943a-3d862e856f6b
 
 jarsigner -verify -verbose -certs /Users/kk035231/scrumapp/platforms/android/app/build/outputs/apk/release/app-release-unsigned.apk
 
@@ -12,10 +12,10 @@ jarsigner -verify -verbose -certs /Users/kk035231/scrumapp/platforms/android/app
 
 --------credentials--------------
 
-keystore: my-release-key.keystore
-password: changeit
+keystore: ctsgreetingsbeta.cerner.com.pfx
+password: t58K=Dp4J+y73w6B
 
-alias: my-key-alias
+alias: 8045729e-a248-4c60-943a-3d862e856f6b
 password: 
 
 

@@ -1,11 +1,19 @@
 <ion-view title="Login" class="home-view">
     <ion-content class="background" scroll="false">
         <!-- class="background" scroll="false" -->
+        <div class="helperText">
+            <!-- <p class="msg">Please make sure you are in office network</p> -->
+            <p class="version">v{{appVersion}}</p>
+        </div>
+
         <div class="login">
+
             <img src="img/Cerner.png" alt="Cerner Logo" width="60%" class="loginImage">
             <button class="button button-positive loginButton" ng-click="performLogin()">
                 Associate Login
             </button>
+            <!-- <p class="helperText">Please make sure you are in office network</p> -->
         </div>
+
     </ion-content>
 </ion-view>

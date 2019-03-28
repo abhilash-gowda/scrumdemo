@@ -33,7 +33,7 @@
 }
 
 .loginButton {
-    top: 90%;
+    top: 85%;
     left: 0;
     right: 0;
     width: 90%;
@@ -119,12 +119,23 @@
     font-weight: bold;
 }
 
-.ion-content .ion-scroll {
-    height: 100%;
-}
-
 .generatePinButton {
     font-size: 20px;
     font-weight: bold;
     margin-right: 4px
+}
+
+.helperText {
+    position: absolute;
+    bottom: inherit;
+    text-align: center;
+    width: 100%;
+}
+
+.msg {
+    font-size: initial;
+}
+
+.version {
+    color: #989898;
 }

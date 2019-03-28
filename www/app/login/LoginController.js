@@ -1,6 +1,12 @@
 "use strict";
 
 angular.module("starter").controller("LoginController", function ($scope, DashboardFactory, LoginFactory, $window, $state, ionicToast) {
+    console.log("hello");
+    $scope.$on('app-version', function(event, obj) {
+        console.log(obj)
+        $scope.appVersion = obj.appVersion;
+        $scope.$apply();
+    });
     $scope.performLogin = function () {
 
         //$scope.authenticate(false);
@@ -34,9 +40,9 @@ angular.module("starter").controller("LoginController", function ($scope, Dashbo
         //         }
         //     })
         // });
-        DashboardFactory.getAgilePriciples().then(
-            function (success) {
-                if (success.status === 200) {
+        // LoginFactory.getAssociates().then(
+        //     function (success) {
+        //         if (success.status === 200) {
                     var authority = "https://login.windows.net/cernerprod.onmicrosoft.com";
                     var resourceUri = "https://graph.microsoft.com";
                     var clientId = "98244847-be00-4aa7-a781-05785722d11f";
@@ -72,6 +78,7 @@ angular.module("starter").controller("LoginController", function ($scope, Dashbo
                                         );
                                     },
                                     function (error) {
+                                        ionicToast.show("Make sure you are in proper network", "bottom", false, 3500);
                                         console.log(error);
                                     }
                                 );
@@ -79,15 +86,15 @@ angular.module("starter").controller("LoginController", function ($scope, Dashbo
                         }, function (err) {
                             console.log("Failed to authenticate: " + err);
                         });
-                }
-                else {
-                    ionicToast.show("Make sure you are in proper network", "bottom", false, 3500);
-                }
-            },
-            function (error) {
-                console.log(error);
-            }
-        );
+        //         }
+        //         else {
+        //             ionicToast.show("Make sure you are in proper network", "bottom", false, 3500);
+        //         }
+        //     },
+        //     function (error) {
+        //         console.log(error);
+        //     }
+        // );
     }
 
     // var AzureB2C = {

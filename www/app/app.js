@@ -50,6 +50,10 @@ angular
                     $rootScope.$broadcast("show-save-dialog");
                 }
             }, 100);
+            
+            cordova.getAppVersion(function(version) {
+                $rootScope.$broadcast('app-version', { appVersion: version });
+            });
         });
 
         $rootScope.$on("loading:show", function() {
@@ -63,6 +67,8 @@ angular
         $rootScope.$on("loading:hide", function() {
             $ionicLoading.hide();
         });
+
+        
     })
     .config(function(
         $stateProvider,
@@ -97,8 +103,8 @@ angular
 
         $stateProvider
             .state("dashboard", {
-                // url: "/dashboard/:associateId/:accessToken",
-                url: "/dashboard/:associateId",
+                url: "/dashboard/:associateId/:accessToken",
+                // url: "/dashboard/:associateId",
                 cache: false,
                 templateUrl: "app/dashboard/Dashboard.html",
                 controller: "DashboardController"
