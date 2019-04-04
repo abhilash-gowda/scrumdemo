@@ -42,7 +42,6 @@ angular.module("starter").controller("DashboardController", function ($scope, $s
         DashboardFactory.getLoggedInUserDetails(loggedUserId).then(
             function (success) {
                 $scope.loggedUserDetails = success.data[0];
-                console.log($scope.loggedUserDetails);
                 //Generate Dashboard graphs
                 $scope.getLoggedInUserPointsForGraph();
                 //Get History
@@ -154,7 +153,6 @@ angular.module("starter").controller("DashboardController", function ($scope, $s
                     )
                     associate.associate.push(eachAssociate);
                 });
-                console.log($scope.teamAssociateDetails);
                 $scope.teamAssociateDetails.push(associate);
                 var x = $scope.teamAssociateDetails.sort(function (a, b) {
                     var p = a.teamName.toLowerCase();
@@ -346,13 +344,17 @@ angular.module("starter").controller("DashboardController", function ($scope, $s
                         $scope.Principles.push(eachDataset)
                     });
                     principleData.forEach(function (element1, pos) {
-                        $scope.rewardMembers.push(element1.associateName);
-
+                         var x = element1.associateName;
+                         var y = x.substr(x.indexOf(",") + 1);
+                         var z = y.substr(0,y.indexOf(' '));
+                         if (z!= ""){
+                         $scope.rewardMembers.push(z);
+                         }
+                         else $scope.rewardMembers.push(y);
                     });
-                    console.log($scope.Principles);
                     $scope.agileRewards.agilePrinciple = $scope.Principles;
                     $scope.loadRewardsGraph();
-                }, 200);
+                }, 570);
 
             });
     };
@@ -527,7 +529,6 @@ angular.module("starter").controller("DashboardController", function ($scope, $s
     // Tab 1 : Dashboard
 
     $scope.loadScrumGraph = function (index) {
-        console.log(index);
         setTimeout(function () {
             $scope.teamGraphAssociateName = [];
             $scope.teamGraphAssociatePoints = [];
@@ -548,6 +549,13 @@ angular.module("starter").controller("DashboardController", function ($scope, $s
                         backgroundColor: $scope.backgroundColors,
                         borderWidth: 1.5
                     }]
+                },
+                options: {
+                     legend: {
+                        labels: {
+                            fontSize: 10
+                        }
+                    }
                 }
             });
 
@@ -580,22 +588,18 @@ angular.module("starter").controller("DashboardController", function ($scope, $s
                     }
                 });
             }
-
         }, 500);
     }
 
     $scope.loadRewardsGraph = function () {
         setTimeout(function () {
             var ctx2 = document.getElementById("myChart2");
-
+  
             var rewardData = {
                 labels: $scope.rewardMembers,
                 datasets: $scope.Principles,
 
             };
-
-            console.log($scope.Principles);
-
             new Chart(ctx2, {
                 type: 'bar',
                 data: rewardData,
@@ -606,12 +610,17 @@ angular.module("starter").controller("DashboardController", function ($scope, $s
                             ticks: {
                                 fontSize: 15
                             }
+                        }],
+                        yAxes: [{
+                            ticks: {
+                                fontSize: 0
+                            }
                         }]
-                    }
+                    },
                 }
             });
             DashboardFactory.isRefreshing = false;
-        }, 500);
+        }, 570);
     }
 
     $scope.getScrumPointsForMonth = function (month) {
@@ -639,9 +648,8 @@ angular.module("starter").controller("DashboardController", function ($scope, $s
         }
         $scope.historyFilter = [];
         var thisMonth = moment().format('YYYY-MM');
-        // $scope.choice = this.Month;
+        //$scope.choice = this.Month;
         $scope.getScrumPointsForMonth(thisMonth);
-
         $scope.historyFilter.push(thisMonth);
         var previousMonth = moment().subtract(1, 'months').format('YYYY-MM');
         $scope.getScrumPointsForMonth(previousMonth);
