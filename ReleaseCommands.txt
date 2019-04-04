@@ -14,7 +14,6 @@ jarsigner -verify -verbose -certs /Users/kk035231/scrumapp/platforms/android/app
 
 keystore: ctsgreetingsbeta.cerner.com.pfx
 password: t58K=Dp4J+y73w6B
-
 alias: 8045729e-a248-4c60-943a-3d862e856f6b
 password: 
 
